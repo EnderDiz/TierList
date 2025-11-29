@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}{{ character.name }}{% endblock %}
+
+{% block content %}
+<div class="card character-header">
+    <div class="char-header-left">
+        {% if character.image_name %}
+            <img class="char-main-img"
+                 src="{{ url_for('static', filename='images/' ~ character.image_name) }}"
+                 alt="{{ character.name }}">
+        {% endif %}
+    </div>
+    <div class="char-header-right">
+        <h1>{{ character.name }}</h1>
+        <p class="char-facts">
+            <span>{{ character.class_name or '—' }}</span> ·
+            <span>{{ character.faction or '—' }}</span>
+        </p>
+        <div class="char-ratings">
+            <div>Оружие: {{ character.tier_weapon or "-" }}</div>
+            <div>Навык: {{ character.tier_skill or "-" }}</div>
+            <div>Пассивка: {{ character.tier_passive or "-" }}</div>
+            <div>Ультимейт: {{ character.tier_ultimate or "-" }}</div>
+        </div>
+        {% if character.short_summary %}
+            <p class="char-summary">{{ character.short_summary }}</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="tabs">
+    <a href="#skills">Навыки</a>
+    <a href="#review">Обзор</a>
+</div>
+
+<div id="skills" class="card">
+    <h2>Навыки</h2>
+    {% for type, skills in skills_by_type.items() %}
+        <h3>{{ type }}</h3>
+        {% for s in skills %}
+            <div class="skill-block">
+                <div class="skill-header">
+                    <span class="skill-name">{{ s.name }}</span>
+                    <span class="skill-meta">
+                        Удары: {{ s.valid_hits or "-" }} · КД: {{ s.cooldown or "-" }}
+                    </span>
+                </div>
+                <p>{{ s.description }}</p>
+                {% if s.level_info %}
+                    <pre class="skill-levels">{{ s.level_info }}</pre>
+                {% endif %}
+            </div>
+        {% endfor %}
+    {% endfor %}
+</div>
+
+<div id="review" class="card">
+    <h2>Обзор</h2>
+    {% if character.review %}
+        <p>{{ character.review }}</p>
+    {% else %}
+        <p>Обзор пока не добавлен.</p>
+    {% endif %}
+</div>
+{% endblock %}

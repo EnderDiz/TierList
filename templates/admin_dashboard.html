@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Admin{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Админка</h1>
+    <a class="btn" href="{{ url_for('admin_new_character') }}">Добавить персонажа</a>
+    <table class="admin-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Имя</th>
+            <th>Slug</th>
+            <th>Класс</th>
+            <th>Фракция</th>
+            <th>Итоговый тир</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for ch in characters %}
+        <tr>
+            <td>{{ ch.id }}</td>
+            <td>{{ ch.name }}</td>
+            <td>{{ ch.slug }}</td>
+            <td>{{ ch.class_name or '—' }}</td>
+            <td>{{ ch.faction or '—' }}</td>
+            <td>{{ ch.overall_tier or '-' }}</td>
+            <td>
+                <a href="{{ url_for('admin_edit_character', char_id=ch.id) }}">Редактировать</a>
+                <form method="post"
+                      action="{{ url_for('admin_delete_character', char_id=ch.id) }}"
+                      style="display:inline"
+                      onsubmit="return confirm('Удалить персонажа?');">
+                    <button type="submit">Удалить</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% if character %}
+    {% set page_title = "Редактирование персонажа" %}
+{% else %}
+    {% set page_title = "Новый персонаж" %}
+{% endif %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>{{ page_title }}</h1>
+    <form method="post">
+        <div class="form-grid">
+            <label>Имя
+                <input type="text" name="name" value="{{ character.name if character else '' }}" required>
+            </label>
+            <label>Slug (url)
+                <input type="text" name="slug" value="{{ character.slug if character else '' }}" required>
+            </label>
+
+            <label>Класс
+                {% set cls = character.class_name if character else '' %}
+                <select name="class_name">
+                    <option value="">Не указан</option>
+                    <option value="Дуэлянт" {% if cls=='Дуэлянт' %}selected{% endif %}>Дуэлянт</option>
+                    <option value="Страж" {% if cls=='Страж' %}selected{% endif %}>Страж</option>
+                    <option value="Поддержка" {% if cls=='Поддержка' %}selected{% endif %}>Поддержка</option>
+                    <option value="Штурмовик" {% if cls=='Штурмовик' %}selected{% endif %}>Штурмовик</option>
+                    <option value="Манипулятор" {% if cls=='Манипулятор' %}selected{% endif %}>Манипулятор</option>
+                </select>
+            </label>
+
+            <label>Фракция
+                {% set f = character.faction if character else '' %}
+                <select name="faction">
+                    <option value="">Не указана</option>
+                    <option value="Ножницы" {% if f=='Ножницы' %}selected{% endif %}>Ножницы</option>
+                    <option value="Урбино" {% if f=='Урбино' %}selected{% endif %}>Урбино</option>
+                    <option value="СТУ" {% if f=='СТУ' %}selected{% endif %}>СТУ</option>
+                </select>
+            </label>
+
+            {% set tw = character.tier_weapon if character else '' %}
+            {% set ts = character.tier_skill if character else '' %}
+            {% set tp = character.tier_passive if character else '' %}
+            {% set tu = character.tier_ultimate if character else '' %}
+
+            <label>Тир (Оружие)
+                <select name="tier_weapon">
+                    <option value="">-</option>
+                    {% for v in ['D','C','B','A','S'] %}
+                    <option value="{{ v }}" {% if tw==v %}selected{% endif %}>{{ v }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+
+            <label>Тир (Навык)
+                <select name="tier_skill">
+                    <option value="">-</option>
+                    {% for v in ['D','C','B','A','S'] %}
+                    <option value="{{ v }}" {% if ts==v %}selected{% endif %}>{{ v }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+
+            <label>Тир (Пассивная способность)
+                <select name="tier_passive">
+                    <option value="">-</option>
+                    {% for v in ['D','C','B','A','S'] %}
+                    <option value="{{ v }}" {% if tp==v %}selected{% endif %}>{{ v }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+
+            <label>Тир (Ультимейт)
+                <select name="tier_ultimate">
+                    <option value="">-</option>
+                    {% for v in ['D','C','B','A','S'] %}
+                    <option value="{{ v }}" {% if tu==v %}selected{% endif %}>{{ v }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>Имя файла изображения
+                <input type="text" name="image_name"
+                       value="{{ character.image_name.replace('.png', '') if character and character.image_name else '' }}">
+            </label>
+            <label>Фракция
+                {% set f = character.faction if character else '' %}
+                <select name="faction">
+                    <option value="">Не указана</option>
+                    <option value="Ножницы" {% if f=='Ножницы' %}selected{% endif %}>Ножницы</option>
+                    <option value="Урбино" {% if f=='Урбино' %}selected{% endif %}>Урбино</option>
+                    <option value="СТУ" {% if f=='СТУ' %}selected{% endif %}>СТУ</option>
+                </select>
+            </label>
+
+            <label>Сложность освоения
+                {% set diff = character.difficulty if character else '' %}
+                <select name="difficulty">
+                    <option value="">Не указана</option>
+                    <option value="Для новичков" {% if diff=='Для новичков' %}selected{% endif %}>Для новичков</option>
+                    <option value="Средний" {% if diff=='Средний' %}selected{% endif %}>Средний</option>
+                    <option value="Сложный" {% if diff=='Сложный' %}selected{% endif %}>Сложный</option>
+                </select>
+            </label>
+        </div>
+
+        <label>Краткое резюме
+            <textarea name="short_summary" rows="4">{{ character.short_summary if character else '' }}</textarea>
+        </label>
+
+        <label>Обзор
+            <textarea name="review" rows="8">{{ character.review if character else '' }}</textarea>
+        </label>
+
+        <button type="submit">Сохранить</button>
+    </form>
+</div>
+{% endblock %}

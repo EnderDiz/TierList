@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Tier List{% endblock %}
+
+{% block content %}
+<div class="card">
+    <h1>Tier List</h1>
+
+    <form class="filters" method="get">
+        <input type="text" name="search" placeholder="Поиск по имени"
+               value="{{ request.args.get('search', '') }}">
+
+        <select name="class_name">
+            <option value="">Все классы</option>
+            {% set cls = request.args.get('class_name') %}
+            <option value="Дуэлянт" {% if cls=='Дуэлянт' %}selected{% endif %}>Дуэлянт</option>
+            <option value="Страж" {% if cls=='Страж' %}selected{% endif %}>Страж</option>
+            <option value="Поддержка" {% if cls=='Поддержка' %}selected{% endif %}>Поддержка</option>
+            <option value="Штурмовик" {% if cls=='Штурмовик' %}selected{% endif %}>Штурмовик</option>
+            <option value="Манипулятор" {% if cls=='Манипулятор' %}selected{% endif %}>Манипулятор</option>
+        </select>
+
+        <select name="faction">
+            <option value="">Все фракции</option>
+            {% set f = request.args.get('faction') %}
+            <option value="Ножницы" {% if f=='Ножницы' %}selected{% endif %}>Ножницы</option>
+            <option value="Урбино" {% if f=='Урбино' %}selected{% endif %}>Урбино</option>
+            <option value="СТУ" {% if f=='СТУ' %}selected{% endif %}>СТУ</option>
+        </select>
+
+        <button type="submit">Фильтр</button>
+    </form>
+</div>
+
+{% for tier in ['S', 'A', 'B', 'C', 'D', 'Unranked'] %}
+    {% set chars = tiers[tier] %}
+    {% if chars %}
+    <div class="card tier-block">
+        <h2 class="tier-title">Tier {{ tier }}</h2>
+        <div class="character-grid">
+            {% for ch in chars %}
+            <a class="character-card" href="{{ url_for('character_detail', slug=ch.slug) }}">
+                <div class="character-card-top">
+                    <div class="character-image">
+                        {% if ch.image_name %}
+                            <img src="{{ url_for('static', filename='images/' ~ ch.image_name) }}"
+                                 alt="{{ ch.name }}">
+                        {% else %}
+                            <div class="placeholder-img">{{ ch.name[0] }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="character-title-block">
+                        <div class="character-name">{{ ch.name }}</div>
+                        <div class="character-meta">
+                            <span>{{ ch.class_name or '—' }}</span> ·
+                            <span>{{ ch.faction or '—' }}</span>
+                        </div>
+                        <div class="character-difficulty">
+                            Сложность: {{ ch.difficulty or '—' }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="character-ratings-badges">
+                    <div class="overall-badge">
+                        <div class="overall-label">Общий ранг</div>
+                        <div class="overall-tier">{{ ch.overall_tier or '-' }}</div>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+{% endfor %}
+{% endblock %}
