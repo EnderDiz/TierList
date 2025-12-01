@@ -18,25 +18,59 @@ def create_app():
         return {"current_user": get_current_user()}
 
     def normalize_image_name(name: str | None):
-        if not name:
-            return None
-        name = name.strip()
-        if not name:
-            return None
-        if not name.lower().endswith(".png"):
-            name += ".png"
-        return name
-
-    def normalize_image_name(name: str | None):
+        """Store only the base file name (no extension) for flexible formats."""
         if not name:
             return None
         name = name.strip()
         if not name:
             return None
 
-        base, ext = os.path.splitext(name)
-        # base = 'file', ext = '.jpg'
-        return base + ".png"
+        base, _ext = os.path.splitext(name)
+        return base or None
+
+    def parse_skills_form(form):
+        names = form.getlist("skill_name")
+        types = form.getlist("skill_type")
+        descriptions = form.getlist("skill_description")
+        valid_hits = form.getlist("skill_valid_hits")
+        cooldowns = form.getlist("skill_cooldown")
+        levels = form.getlist("skill_level_info")
+        ids = form.getlist("skill_id")
+
+        skills = []
+        for idx, name in enumerate(names):
+            if not name or not name.strip():
+                continue
+            skills.append({
+                "id": ids[idx] if idx < len(ids) else "",
+                "name": name.strip(),
+                "type": types[idx].strip() if idx < len(types) else None,
+                "description": descriptions[idx].strip() if idx < len(descriptions) else None,
+                "valid_hits": valid_hits[idx].strip() if idx < len(valid_hits) else None,
+                "cooldown": cooldowns[idx].strip() if idx < len(cooldowns) else None,
+                "level_info": levels[idx].strip() if idx < len(levels) else None,
+            })
+        return skills
+
+    def image_sources(image_name: str | None):
+        base = normalize_image_name(image_name)
+        if not base:
+            return []
+
+        static_dir = app.static_folder or os.path.join(app.root_path, "static")
+        sources = []
+        for ext, mime in (
+            (".webp", "image/webp"),
+            (".png", "image/png"),
+            (".jpg", "image/jpeg"),
+            (".jpeg", "image/jpeg"),
+        ):
+            candidate = os.path.join(static_dir, "images", base + ext)
+            if os.path.exists(candidate):
+                sources.append({"path": "images/" + base + ext, "mime": mime})
+        return sources
+
+    app.jinja_env.globals["image_sources"] = image_sources
 
     # ------- Маршруты --------
 
@@ -84,7 +118,16 @@ def create_app():
 
         characters = query.all()
 
-        tiers = {"S": [], "A": [], "B": [], "C": [], "D": [], "Unranked": []}
+        tiers = {
+            "SSS": [],
+            "SS": [],
+            "S": [],
+            "A": [],
+            "B": [],
+            "C": [],
+            "D": [],
+            "Unranked": [],
+        }
         for ch in characters:
             t = ch.overall_tier
             if t in tiers:
@@ -95,7 +138,31 @@ def create_app():
         for key in tiers:
             tiers[key] = sorted(tiers[key], key=lambda c: c.name)
 
-        return render_template("tier_list.html", tiers=tiers)
+        available_classes = [
+            row[0]
+            for row in db.session
+            .query(Character.class_name)
+            .filter(Character.class_name.isnot(None))
+            .distinct()
+            .order_by(Character.class_name)
+            .all()
+        ]
+        available_factions = [
+            row[0]
+            for row in db.session
+            .query(Character.faction)
+            .filter(Character.faction.isnot(None))
+            .distinct()
+            .order_by(Character.faction)
+            .all()
+        ]
+
+        return render_template(
+            "tier_list.html",
+            tiers=tiers,
+            available_classes=available_classes,
+            available_factions=available_factions,
+        )
 
     @app.route("/character/<slug>")
     def character_detail(slug):
@@ -142,6 +209,8 @@ def create_app():
             image_name_raw = request.form.get("image_name")
             image_name = normalize_image_name(image_name_raw)
 
+            skills_payload = parse_skills_form(request.form)
+
             ch = Character(
                 name=name,
                 slug=slug,
@@ -156,6 +225,15 @@ def create_app():
                 review=review,
                 image_name=image_name,
             )
+            for s in skills_payload:
+                ch.skills.append(Skill(
+                    name=s["name"],
+                    type=s.get("type"),
+                    description=s.get("description"),
+                    valid_hits=s.get("valid_hits"),
+                    cooldown=s.get("cooldown"),
+                    level_info=s.get("level_info"),
+                ))
             db.session.add(ch)
             db.session.commit()
             flash("Персонаж создан.", "success")
@@ -186,6 +264,30 @@ def create_app():
 
             img_raw = request.form.get("image_name")
             ch.image_name = normalize_image_name(img_raw)
+
+            skills_payload = parse_skills_form(request.form)
+            existing_by_id = {str(s.id): s for s in ch.skills if s.id}
+            kept_ids = set()
+
+            for payload in skills_payload:
+                skill_id = payload.pop("id", "")
+                if skill_id and skill_id in existing_by_id:
+                    skill = existing_by_id[skill_id]
+                    kept_ids.add(skill_id)
+                else:
+                    skill = Skill(character=ch)
+                    db.session.add(skill)
+
+                skill.name = payload.get("name")
+                skill.type = payload.get("type")
+                skill.description = payload.get("description")
+                skill.valid_hits = payload.get("valid_hits")
+                skill.cooldown = payload.get("cooldown")
+                skill.level_info = payload.get("level_info")
+
+            for skill in list(ch.skills):
+                if skill.id and str(skill.id) not in kept_ids and str(skill.id) in existing_by_id:
+                    db.session.delete(skill)
 
             db.session.commit()
             flash("Персонаж сохранён.", "success")

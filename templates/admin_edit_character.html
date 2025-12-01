@@ -82,20 +82,10 @@
                     {% endfor %}
                 </select>
             </label>
-            <label>Имя файла изображения
+            <label>Имя файла изображения (без расширения)
                 <input type="text" name="image_name"
-                       value="{{ character.image_name.replace('.png', '') if character and character.image_name else '' }}">
+                       value="{{ character.image_name.rsplit('.', 1)[0] if character and character.image_name else '' }}">
             </label>
-            <label>Фракция
-                {% set f = character.faction if character else '' %}
-                <select name="faction">
-                    <option value="">Не указана</option>
-                    <option value="Ножницы" {% if f=='Ножницы' %}selected{% endif %}>Ножницы</option>
-                    <option value="Урбино" {% if f=='Урбино' %}selected{% endif %}>Урбино</option>
-                    <option value="СТУ" {% if f=='СТУ' %}selected{% endif %}>СТУ</option>
-                </select>
-            </label>
-
             <label>Сложность освоения
                 {% set diff = character.difficulty if character else '' %}
                 <select name="difficulty">
@@ -106,7 +96,6 @@
                 </select>
             </label>
         </div>
-
         <label>Краткое резюме
             <textarea name="short_summary" rows="4">{{ character.short_summary if character else '' }}</textarea>
         </label>
@@ -115,7 +104,80 @@
             <textarea name="review" rows="8">{{ character.review if character else '' }}</textarea>
         </label>
 
+        <div class="skills-form">
+            <div class="skills-form__header">
+                <h2>Навыки</h2>
+                <button type="button" class="btn btn-ghost" id="add-skill-btn">Добавить навык</button>
+            </div>
+            <div id="skills-list">
+                {% set skills = character.skills if character and character.skills else [None] %}
+                {% for skill in skills %}
+                    <div class="skill-form-row">
+                        <input type="hidden" name="skill_id" value="{{ skill.id if skill else '' }}">
+                        <label>Название навыка
+                            <input type="text" name="skill_name" value="{{ skill.name if skill else '' }}" placeholder="Напр. Striker Kick">
+                        </label>
+                        <label>Тип
+                            <input type="text" name="skill_type" value="{{ skill.type if skill else '' }}" placeholder="Ультимейт / Пассивка / Навык">
+                        </label>
+                        <label>Описание
+                            <textarea name="skill_description" rows="3" placeholder="Кратко опишите механику">{{ skill.description if skill else '' }}</textarea>
+                        </label>
+                        <div class="form-grid">
+                            <label>Количество ударов
+                                <input type="text" name="skill_valid_hits" value="{{ skill.valid_hits if skill else '' }}" placeholder="Напр. 3">
+                            </label>
+                            <label>Кулдаун
+                                <input type="text" name="skill_cooldown" value="{{ skill.cooldown if skill else '' }}" placeholder="Напр. 12с">
+                            </label>
+                        </div>
+                        <label>Прокачка по уровням
+                            <textarea name="skill_level_info" rows="3" placeholder="Lv.1 ...">{{ skill.level_info if skill else '' }}</textarea>
+                        </label>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
         <button type="submit">Сохранить</button>
     </form>
+
+    <template id="skill-template">
+        <div class="skill-form-row">
+            <input type="hidden" name="skill_id" value="">
+            <label>Название навыка
+                <input type="text" name="skill_name" value="" placeholder="Напр. Striker Kick">
+            </label>
+            <label>Тип
+                <input type="text" name="skill_type" value="" placeholder="Ультимейт / Пассивка / Навык">
+            </label>
+            <label>Описание
+                <textarea name="skill_description" rows="3" placeholder="Кратко опишите механику"></textarea>
+            </label>
+            <div class="form-grid">
+                <label>Количество ударов
+                    <input type="text" name="skill_valid_hits" value="" placeholder="Напр. 3">
+                </label>
+                <label>Кулдаун
+                    <input type="text" name="skill_cooldown" value="" placeholder="Напр. 12с">
+                </label>
+            </div>
+            <label>Прокачка по уровням
+                <textarea name="skill_level_info" rows="3" placeholder="Lv.1 ..."></textarea>
+            </label>
+        </div>
+    </template>
+
+    <script>
+        const skillsList = document.getElementById('skills-list');
+        const template = document.getElementById('skill-template');
+        const addBtn = document.getElementById('add-skill-btn');
+
+        addBtn?.addEventListener('click', () => {
+            const clone = template.content.cloneNode(true);
+            skillsList.appendChild(clone);
+            addBtn.blur();
+        });
+    </script>
 </div>
 {% endblock %}
