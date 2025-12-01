@@ -3,6 +3,10 @@
 
 {% block title %}{{ character.name }}{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='character.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="card character-header">
     <div class="char-header-left">

@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <title>{% block title %}Tier List{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
 <header class="top-nav">
@@ -25,7 +26,7 @@
     </div>
 </header>
 
-<main class="page-container">
+<main class="page-container {% block page_class %}{% endblock %}">
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
         <div class="flash-container">

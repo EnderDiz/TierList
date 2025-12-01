@@ -3,8 +3,12 @@
 
 {% block title %}Login{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+{% endblock %}
+
 {% block content %}
-<div class="card">
+<div class="card login-card">
     <h1>Вход</h1>
     <form method="post">
         <label>Логин

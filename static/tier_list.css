@@ -1,0 +1,200 @@
+/* Стили страницы тир-листа */
+
+/* Фильтры поиска и выбора фракции/класса */
+.tier-page {
+    text-align: center;
+}
+
+.tier-filters .filters {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.filters-bar {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    flex-wrap: wrap;
+}
+
+.search-input {
+    flex: 1 1 260px;
+}
+
+.tier-filters input[type="text"] {
+    background: #f8f9fb;
+    border: 1px solid #cfd4df;
+}
+
+.faction-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+    flex: 0 1 340px;
+}
+
+/* Универсальные кнопки-чипы для фильтров */
+.chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.class-filters {
+    justify-content: center;
+}
+
+.chip {
+    background: #f1f2f6;
+    border: 1px solid #cfd4df;
+    color: #2e3344;
+    padding: 8px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.12s ease;
+    margin-top: 0;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.chip:hover {
+    border-color: #aab8ff;
+    box-shadow: 0 6px 12px rgba(82, 99, 170, 0.15);
+}
+
+.chip.active {
+    background: #5c74ff;
+    border-color: #5c74ff;
+    color: #ffffff;
+    box-shadow: 0 6px 14px rgba(92, 116, 255, 0.35);
+}
+
+/* === ТИРЫ И ИКОНКИ === */
+.tier-row {
+    display: flex;
+    align-items: stretch;
+    background: #f9f9fc;
+    border: 1px solid #dfe3eb;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    box-shadow: 0 10px 24px rgba(19, 25, 44, 0.08);
+}
+
+.tier-marker {
+    position: relative;
+    width: 108px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 26px;
+    font-weight: 800;
+    font-size: 20px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #141824;
+    background: #eceef4;
+    border-right: 1px solid #d5d9e3;
+}
+
+.tier-marker::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 16px;
+    background: var(--tier-color, #7c7f8a);
+}
+
+.tier-marker.tier-sss { --tier-color: #b075d9; }
+.tier-marker.tier-ss  { --tier-color: #d28a8a; }
+.tier-marker.tier-s   { --tier-color: #e1b177; }
+.tier-marker.tier-a   { --tier-color: #e8cf7d; }
+.tier-marker.tier-b   { --tier-color: #8fc48f; }
+.tier-marker.tier-c   { --tier-color: #8abbd6; }
+.tier-marker.tier-d   { --tier-color: #9b9fa7; }
+.tier-marker.tier-unranked { --tier-color: #8a8f99; }
+
+.tier-grid {
+    flex: 1 1 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 14px;
+    padding: 16px;
+    align-items: stretch;
+    justify-items: start;
+    text-align: left;
+}
+
+.tier-icon {
+    display: block;
+}
+
+.icon-frame {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #eef0f6;
+    border: 1px solid #d0d5df;
+    box-shadow: 0 6px 14px rgba(19, 25, 44, 0.1);
+    width: 112px;
+    height: 112px;
+}
+
+.icon-frame::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 5px;
+    background: var(--tier-color, #b5b7bf);
+}
+
+.tier-row .face-frame-icon,
+.tier-row .icon-frame picture,
+.tier-row .icon-frame .placeholder-img,
+.tier-row .icon-frame .face-frame {
+    width: 100%;
+    height: 100%;
+}
+
+.face-frame-icon {
+    width: 112px;
+    height: 112px;
+}
+
+.icon-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(238, 240, 246, 0) 0%, rgba(19, 25, 44, 0.5) 100%);
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 10px;
+    gap: 4px;
+    transition: opacity 0.12s ease;
+}
+
+.tier-icon:hover .icon-overlay {
+    opacity: 1;
+}
+
+.overlay-name {
+    font-weight: 800;
+    font-size: 14px;
+    text-shadow: 0 2px 8px rgba(19, 25, 44, 0.35);
+}
+
+.overlay-meta {
+    font-size: 12px;
+    color: #e8ebf5;
+}
+
+.overlay-meta.subtle {
+    opacity: 0.85;
+}

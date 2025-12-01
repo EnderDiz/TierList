@@ -1,0 +1,12 @@
+/* Стили страницы входа */
+
+.login-card {
+    max-width: 420px;
+    margin: 0 auto;
+}
+
+.login-card form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
