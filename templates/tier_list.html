@@ -3,35 +3,51 @@
 
 {% block title %}Tier List{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='tier_list.css') }}">
+{% endblock %}
+
+{% block page_class %}tier-page{% endblock %}
+
 {% block content %}
+<!-- Обертка с фильтрами для поиска и сортировок по фракции/классу -->
 <div class="card tier-filters">
     <form class="filters" method="get" id="filter-form">
-        <input type="text" name="search" id="search" placeholder="Search characters" value="{{ request.args.get('search', '') }}">
+        <div class="filters-bar">
+            <!-- Поле для текстового поиска по имени персонажа -->
+            <div class="search-input">
+                <input type="text" name="search" id="search" placeholder="Search characters" value="{{ request.args.get('search', '') }}">
+            </div>
+
+            {% set f = request.args.get('faction') %}
+            <input type="hidden" name="faction" value="{{ f }}" id="faction-input">
+            <!-- Кнопки выбора фракции: справа от поиска, * означает любую фракцию -->
+            <div class="chip-group faction-filters" aria-label="Фракция">
+                <button type="button" class="chip {% if not f %}active{% endif %}" data-target="faction-input" data-value="">*</button>
+                {% for name in available_factions %}
+                <button type="button" class="chip {% if f == name %}active{% endif %}" data-target="faction-input" data-value="{{ name }}">{{ name }}</button>
+                {% endfor %}
+            </div>
+        </div>
 
         {% set cls = request.args.get('class_name') %}
         <input type="hidden" name="class_name" value="{{ cls }}" id="class-input">
-        <div class="chip-group" aria-label="Класс">
-            <button type="button" class="chip {% if not cls %}active{% endif %}" data-target="class-input" data-value="">Любой класс</button>
+        <!-- Кнопки выбора класса: располагаются под строкой поиска, * означает любой класс -->
+        <div class="chip-group class-filters" aria-label="Класс">
+            <button type="button" class="chip {% if not cls %}active{% endif %}" data-target="class-input" data-value="">*</button>
             {% for name in available_classes %}
             <button type="button" class="chip {% if cls == name %}active{% endif %}" data-target="class-input" data-value="{{ name }}">{{ name }}</button>
-            {% endfor %}
-        </div>
-
-        {% set f = request.args.get('faction') %}
-        <input type="hidden" name="faction" value="{{ f }}" id="faction-input">
-        <div class="chip-group" aria-label="Фракция">
-            <button type="button" class="chip {% if not f %}active{% endif %}" data-target="faction-input" data-value="">Любая фракция</button>
-            {% for name in available_factions %}
-            <button type="button" class="chip {% if f == name %}active{% endif %}" data-target="faction-input" data-value="{{ name }}">{{ name }}</button>
             {% endfor %}
         </div>
     </form>
 </div>
 
+<!-- Список рядов тир-листа: маркер слева, иконки выровнены по левому краю -->
 {% for tier in ['SSS', 'SS', 'S', 'A', 'B', 'C', 'D', 'Unranked'] %}
     {% set chars = tiers.get(tier, []) %}
     {% if chars %}
     <div class="tier-row">
+        <div class="tier-marker tier-{{ tier|lower }}">{{ tier }}</div>
         <div class="tier-grid">
             {% for ch in chars %}
             <a class="tier-icon" href="{{ url_for('character_detail', slug=ch.slug) }}">
@@ -46,22 +62,24 @@
             </a>
             {% endfor %}
         </div>
-        <div class="tier-marker tier-{{ tier|lower }}">{{ tier }}</div>
     </div>
     {% endif %}
 {% endfor %}
 
 <script>
+// Обработчики для поиска и переключателей фракции/класса
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('filter-form');
     const search = document.getElementById('search');
     let debounceId;
 
+    // Отправляем форму с задержкой, чтобы не спамить запросы при вводе
     search.addEventListener('input', () => {
         clearTimeout(debounceId);
         debounceId = setTimeout(() => form.requestSubmit(), 150);
     });
 
+    // Переключение активного чипа и отправка формы
     document.querySelectorAll('.chip').forEach(btn => {
         btn.addEventListener('click', () => {
             const target = document.getElementById(btn.dataset.target);

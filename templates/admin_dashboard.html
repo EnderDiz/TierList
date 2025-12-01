@@ -2,6 +2,10 @@
 
 {% block title %}Admin{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="card">
     <h1>Админка</h1>

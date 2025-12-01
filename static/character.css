@@ -1,0 +1,94 @@
+/* Стили страницы персонажа */
+
+.character-header {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 20px;
+    align-items: center;
+}
+
+.char-header-left {
+    justify-self: center;
+}
+
+.char-header-right h1 {
+    margin-bottom: 6px;
+}
+
+.char-facts {
+    margin: 0 0 10px;
+    color: #4a5164;
+    font-weight: 600;
+}
+
+.char-ratings {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 8px;
+    margin-bottom: 8px;
+    color: #2e3344;
+    font-weight: 600;
+}
+
+.char-summary {
+    margin: 0;
+    color: #2c3242;
+}
+
+.tabs {
+    display: flex;
+    gap: 10px;
+    margin: 0 0 16px;
+}
+
+.tabs a {
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: #f1f2f6;
+    border: 1px solid #d5d9e3;
+    font-weight: 700;
+}
+
+.tabs a:hover {
+    background: #e4e7f0;
+}
+
+.skill-block {
+    padding: 12px 0;
+    border-bottom: 1px solid #e2e5ed;
+}
+
+.skill-block:last-child {
+    border-bottom: none;
+}
+
+.skill-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 6px;
+}
+
+.skill-name {
+    font-weight: 800;
+    color: #141824;
+}
+
+.skill-meta {
+    color: #4a5164;
+    font-size: 13px;
+}
+
+.skill-levels {
+    background: #f8f9fb;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #dfe3eb;
+    white-space: pre-wrap;
+}
+
+.rich-text {
+    line-height: 1.5;
+    color: #2c3242;
+}

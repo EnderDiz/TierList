@@ -8,6 +8,10 @@
 
 {% block title %}{{ page_title }}{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="card">
     <h1>{{ page_title }}</h1>

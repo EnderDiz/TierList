@@ -1,26 +1,23 @@
 /* ============================================
-   Основной файл стилей приложения тир-листа.
-   В этом файле задаётся внешний вид:
-   фон, шапка, фильтры, тир-строки и иконки.
+   Общие стили сайта. Базовая типографика,
+   шапка, карточки, формы и графика, которые
+   используются на всех страницах.
 ============================================ */
 
 /* === БАЗОВЫЕ СТИЛИ СТРАНИЦЫ === */
-/* Общий фон и базовый текст сайта (аналогично скриншоту) */
 body {
     margin: 0;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: #101219;   /* Основной фон сайта (тёмный синевато-серый) */
-    color: #f6f7fb;        /* Базовый цвет текста */
+    background: #f2f3f7;
+    color: #1f2430;
 }
 
-/* Ссылки по умолчанию (наследуют цвет текста, без подчёркивания) */
 a {
     color: inherit;
     text-decoration: none;
 }
 
 /* === ВЕРХНЯЯ ПАНЕЛЬ НАВИГАЦИИ (top-nav) === */
-/* Прилипшая шапка: логотип + ссылки + блок пользователя */
 .top-nav {
     position: sticky;
     top: 0;
@@ -29,65 +26,58 @@ a {
     align-items: center;
     justify-content: space-between;
     padding: 12px 32px;
-    background: #141824;                        /* Фон шапки */
-    border-bottom: 1px solid #242838;          /* Тонкая нижняя граница */
+    background: #e6e8ed;
+    border-bottom: 1px solid #cfd3db;
+    color: #1f2430;
     backdrop-filter: blur(8px);
 }
 
-/* Логотип / название проекта в шапке */
 .logo {
     font-weight: 700;
     font-size: 18px;
 }
 
-/* Ссылки навигации в шапке (Tier List, Admin) */
 .top-nav nav a {
     margin-right: 16px;
     font-size: 14px;
-    opacity: 0.9;
+    opacity: 0.85;
 }
 
-/* Подсветка ссылок при наведении */
 .top-nav nav a:hover {
     opacity: 1;
 }
 
-/* Блок пользователя справа (логин/выход) */
 .user-block a {
     font-size: 14px;
+    font-weight: 600;
 }
 
 /* === ОБЩИЙ КОНТЕЙНЕР КОНТЕНТА === */
-/* Центрирование контента и ограничение ширины */
 .page-container {
-    max-width: 1280px;                /* Чуть шире для длинных рядов */
+    max-width: 1280px;
     margin: 24px auto 40px;
     padding: 0 16px;
 }
 
 /* === КАРТОЧКИ (card) === */
-/* Универсальные блоки: фильтры, детали персонажа, админка */
 .card {
-    background: #171b26;                          /* Плоский тёмный фон, как блок фильтров на скрине */
+    background: #ffffff;
     border-radius: 12px;
     padding: 16px 18px;
     margin-bottom: 20px;
-    border: 1px solid #252a3a;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.55);
+    border: 1px solid #dfe3eb;
+    box-shadow: 0 10px 25px rgba(19, 25, 44, 0.08);
 }
 
-/* Заголовки внутри карточек */
 h1, h2, h3 {
     margin-top: 0;
+    color: #131828;
 }
 
-/* === FLASH-СООБЩЕНИЯ === */
-/* Контейнер для уведомлений над контентом */
 .flash-container {
     margin-bottom: 16px;
 }
 
-/* Базовый вид flash-сообщения */
 .flash {
     padding: 8px 12px;
     border-radius: 8px;
@@ -95,277 +85,77 @@ h1, h2, h3 {
     margin-bottom: 6px;
 }
 
-/* Успешное уведомление */
 .flash.success {
-    background: rgba(46, 204, 113, 0.12);
-    border: 1px solid rgba(46, 204, 113, 0.5);
+    background: #e7f7ee;
+    border: 1px solid #a8e0bd;
+    color: #1f7b45;
 }
 
-/* Ошибочное уведомление */
 .flash.error {
-    background: rgba(231, 76, 60, 0.12);
-    border: 1px solid rgba(231, 76, 60, 0.5);
+    background: #fbeaea;
+    border: 1px solid #f3b3b3;
+    color: #b62222;
 }
 
-/* === ФОРМЫ (логин, фильтры, админка) === */
-/* Подпись к полю формы */
+/* === ФОРМЫ === */
 label {
     display: block;
     font-size: 14px;
     margin-bottom: 10px;
+    color: #2c3242;
 }
 
-/* Поля ввода/пароль/textarea/select */
 input[type="text"],
 input[type="password"],
 textarea,
 select {
     width: 100%;
-    background: #10131d;                     /* Фон инпутов ближе к фону скрина */
+    background: #f6f7fa;
     border-radius: 8px;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid #cfd4df;
     padding: 10px 12px;
-    color: #f4f6fc;
+    color: #1f2430;
     font: inherit;
     box-sizing: border-box;
 }
 
-/* Кнопки и .btn-ссылки (например, в админке) */
+input[type="text"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+    outline: 2px solid #aab8ff;
+    border-color: #aab8ff;
+}
+
 button,
 .btn {
     display: inline-block;
-    padding: 8px 14px;
+    padding: 10px 14px;
     border-radius: 8px;
     border: none;
-    background: linear-gradient(135deg, #4b68ff, #3a56e6); /* Синий градиент в стиле скрина */
+    background: linear-gradient(135deg, #5c74ff, #4e63e2);
     color: #ffffff;
     font-size: 14px;
     cursor: pointer;
     margin-top: 8px;
+    transition: filter 0.12s ease, transform 0.12s ease;
 }
 
-/* Лёгкая подсветка кнопки при наведении */
 button:hover,
 .btn:hover {
-    filter: brightness(1.08);
+    filter: brightness(1.04);
+    transform: translateY(-1px);
 }
 
-/* === ФИЛЬТРЫ НА ТИР-ЛИСТЕ === */
-/* Вся колонка фильтров (поиск + чипы) */
-.filters {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-/* Поле поиска персонажей в фильтрах */
-.tier-filters input[type="text"] {
-    flex: 1 1 auto;
-    background: #171b26;          /* Единый фон с карточкой фильтров */
-    border-radius: 8px;
-    border: 1px solid #2a3043;
-    padding: 10px 14px;
-}
-
-/* Группа чипов классов/фракций */
-.chip-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-}
-
-/* Обычный чип (неактивный) */
-.chip {
-    background: #171b26;
-    border: 1px solid #2a3043;
-    color: #c7cbe0;
-    padding: 6px 12px;
-    border-radius: 999px;      /* Пилюльки как на скрине */
-    cursor: pointer;
-    transition: all 0.1s ease;
-    margin-top: 0;
-    font-size: 13px;
-}
-
-/* Активный чип (выбранный класс/фракция) */
-.chip.active {
-    background: #4a63ff;       /* Синий фон активного фильтра */
-    border-color: #4a63ff;
-    color: #ffffff;
-    box-shadow: 0 4px 10px rgba(74, 99, 255, 0.35);
-}
-
-/* Подсветка чипа при наведении */
-.chip:hover {
-    border-color: #4a63ff;
-}
-
-/* ============================================
-   ТИР-СПИСОК: РЯДЫ, МАРКЕРЫ И ИКОНКИ
-============================================ */
-
-/* === СТРОКА ТИРА (tier-row) === */
-/* Один горизонтальный ряд: слева маркер тира, справа иконки.
-   Высота ряда определяется высотой иконок. */
-.tier-row {
-    display: flex;                      /* Горизонтальное расположение: маркер + иконки */
-    align-items: stretch;               /* Маркер растягивается по высоте блока с иконками */
-    background: #1b1f2a;                /* Фон строки тира */
-    border-top: 1px solid #262a37;      /* Верхняя разделительная линия между рядами */
-    border-bottom: 1px solid #262a37;   /* Нижняя разделительная линия между рядами */
-    margin-bottom: 8px;                 /* Расстояние между рядами */
-}
-
-/* === СЕТКА ИКОНОК (tier-grid) === */
-/* Правая часть ряда: сетка иконок персонажей как на скриншоте */
-.tier-grid {
-    flex: 1 1 auto;                                          /* Занимает всё пространство справа от маркера */
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Размер иконок в строке */
-    gap: 12px;                                               /* Расстояние между иконками */
-    padding: 12px 16px;                                      /* Внутренние отступы области с иконками */
-    align-items: stretch;
-    justify-items: start;
-}
-
-/* Ссылка вокруг одной иконки персонажа */
-.tier-icon {
-    display: block;
-}
-
-/* === ИКОНКА ПЕРСОНАЖА (icon-frame) === */
-/* Внешняя рамка иконки: почти квадрат, с тонкой рамкой и нижней цветной полоской */
-.icon-frame {
-    position: relative;
-    border-radius: 4px;                   /* Небольшое скругление, как на примере */
-    overflow: hidden;
-    background: #0f1219;
-    border: 1px solid #242838;            /* Тонкая рамка вокруг иконки */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.45);
-    width: 84px;
-    height: 84px;
-}
-
-/* Внутреннее содержимое рамки — картинка/плейсхолдер заполняют иконку */
-.icon-frame picture,
-.icon-frame .placeholder-img,
-.icon-frame .face-frame,
-.char-main-img,
-.face-frame-icon {
-    width: 100%;
-    height: 100%;
-}
-
-/* Дополнительная плоская рамка (если используешь отдельное изображение) */
-.face-frame-icon {
-    display: block;
-    width: 84px;
-    height: 84px;
-}
-
-/* Нижняя цветная полоска под иконкой (как жёлтый бордюр в примере) */
-.icon-frame::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 4px;
-    /*background: #f2a325;*/                 /* Цвет полосы под иконкой — меняй под игру */
-}
-
-/* === ОВЕРЛЕЙ ПРИ НАВЕДЕНИИ НА ИКОНКУ === */
-/* Тёмный градиент с подписью, который появляется поверх иконки при hover */
-.icon-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(8, 10, 18, 0.1) 0%, rgba(8, 10, 18, 0.88) 100%);
-    opacity: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 8px;
-    gap: 3px;
-    transition: opacity 0.12s ease;
-}
-
-/* Показать оверлей при наведении */
-.tier-icon:hover .icon-overlay {
-    opacity: 1;
-}
-
-/* Имя персонажа в оверлее */
-.overlay-name {
-    font-weight: 700;
-    font-size: 13px;
-    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
-}
-
-/* Доп. инфа (класс, фракция, сложность) */
-.overlay-meta {
-    font-size: 11px;
-    color: #cdd3e4;
-}
-
-/* Приглушённый вариант overlay-meta */
-.overlay-meta.subtle {
-    opacity: 0.85;
-}
-
-/* === МАРКЕР ТИРА (tier-marker) === */
-/* Левый блок с цветной вертикальной полосой и текстом SSS/SS/S/... */
-.tier-marker {
-    position: relative;
-    width: 88px;                         /* Ширина маркировки тира (достаточно для текста SSS) */
-    display: flex;
-    align-items: center;                 /* Центрируем текст по вертикали относительно иконок */
-    justify-content: flex-start;
-    padding-left: 28px;                  /* Отступ от цветной полосы до текста */
-    font-weight: 800;
-    font-size: 20px;
-    letter-spacing: 1px;
-    text-transform: uppercase;           /* Приводим текст тира к верхнему регистру */
-    color: #11131a;
-    background: var(--tier-color, #9b59b6);                 /* Тот же фон, что и у ряда */
-    border-right: 1px solid #262a37;     /* Вертикальная линия между маркером и иконками */
-}
-
-/* Вертикальная цветная полоса слева — полностью по высоте ряда */
-.tier-marker::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;                           /* Полоса тянется от верха до низа ряда */
-    width: 18px;                         /* Ширина полосы */
-    background: var(--tier-color, #9b59b6);
-}
-
-/* Цвета для конкретных тиров.
-   Меняешь только --tier-color под свою палитру. */
-.tier-marker.tier-sss { --tier-color: #d84bff; }   /* Ярко-фиолетовый */
-.tier-marker.tier-ss  { --tier-color: #e06666; }   /* Красно-оранжевый */
-.tier-marker.tier-s   { --tier-color: #f0a54c; }   /* Оранжевый */
-.tier-marker.tier-a   { --tier-color: #f5d96b; }   /* Жёлтый */
-.tier-marker.tier-b   { --tier-color: #6ebf6d; }   /* Зелёный */
-.tier-marker.tier-c   { --tier-color: #5fbcd3; }   /* Голубой */
-.tier-marker.tier-d   { --tier-color: #7f7f7f; }   /* Серый */
-.tier-marker.tier-unranked { --tier-color: #4b4f60; } /* Тёмно-серый для Unranked */
-
-/* ============================================
-   КРУПНЫЕ ПОРТРЕТЫ ПЕРСОНАЖЕЙ (страница героя)
-============================================ */
-
-/* Обёртка для большого портрета на странице персонажа */
+/* === ГРАФИКА ПЕРСОНАЖЕЙ === */
 .face-frame {
     display: block;
     overflow: hidden;
     border-radius: 10px;
-    background: #0b1122;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    background: #e6e8ed;
+    box-shadow: 0 6px 12px rgba(19, 25, 44, 0.08);
 }
 
-/* Заполнение рамки картинкой/заглушкой */
 .face-frame img,
 .placeholder-img img {
     width: 100%;
@@ -375,14 +165,25 @@ button:hover,
     display: block;
 }
 
-/* Маленький портрет (если используешь где-то ещё) */
+.placeholder-img {
+    display: grid;
+    place-items: center;
+    background: #dfe3eb;
+    color: #4a5164;
+    font-weight: 700;
+}
+
 .face-frame-small {
     width: 64px;
     height: 64px;
 }
 
-/* Большой портрет (шапка персонажа) */
+.face-frame-icon {
+    width: 84px;
+    height: 84px;
+}
+
 .face-frame-large {
     width: 220px;
-    aspect-ratio: 1 / 1;   /* Квадратный портрет */
+    aspect-ratio: 1 / 1;
 }
