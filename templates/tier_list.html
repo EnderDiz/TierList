@@ -1,76 +1,78 @@
 {% extends "base.html" %}
+{% import "_macros.html" as macros %}
 
 {% block title %}Tier List{% endblock %}
 
 {% block content %}
-<div class="card">
-    <h1>Tier List</h1>
+<div class="card tier-filters">
+    <form class="filters" method="get" id="filter-form">
+        <input type="text" name="search" id="search" placeholder="Search characters" value="{{ request.args.get('search', '') }}">
 
-    <form class="filters" method="get">
-        <input type="text" name="search" placeholder="Поиск по имени"
-               value="{{ request.args.get('search', '') }}">
+        {% set cls = request.args.get('class_name') %}
+        <input type="hidden" name="class_name" value="{{ cls }}" id="class-input">
+        <div class="chip-group" aria-label="Класс">
+            <button type="button" class="chip {% if not cls %}active{% endif %}" data-target="class-input" data-value="">Любой класс</button>
+            {% for name in available_classes %}
+            <button type="button" class="chip {% if cls == name %}active{% endif %}" data-target="class-input" data-value="{{ name }}">{{ name }}</button>
+            {% endfor %}
+        </div>
 
-        <select name="class_name">
-            <option value="">Все классы</option>
-            {% set cls = request.args.get('class_name') %}
-            <option value="Дуэлянт" {% if cls=='Дуэлянт' %}selected{% endif %}>Дуэлянт</option>
-            <option value="Страж" {% if cls=='Страж' %}selected{% endif %}>Страж</option>
-            <option value="Поддержка" {% if cls=='Поддержка' %}selected{% endif %}>Поддержка</option>
-            <option value="Штурмовик" {% if cls=='Штурмовик' %}selected{% endif %}>Штурмовик</option>
-            <option value="Манипулятор" {% if cls=='Манипулятор' %}selected{% endif %}>Манипулятор</option>
-        </select>
-
-        <select name="faction">
-            <option value="">Все фракции</option>
-            {% set f = request.args.get('faction') %}
-            <option value="Ножницы" {% if f=='Ножницы' %}selected{% endif %}>Ножницы</option>
-            <option value="Урбино" {% if f=='Урбино' %}selected{% endif %}>Урбино</option>
-            <option value="СТУ" {% if f=='СТУ' %}selected{% endif %}>СТУ</option>
-        </select>
-
-        <button type="submit">Фильтр</button>
+        {% set f = request.args.get('faction') %}
+        <input type="hidden" name="faction" value="{{ f }}" id="faction-input">
+        <div class="chip-group" aria-label="Фракция">
+            <button type="button" class="chip {% if not f %}active{% endif %}" data-target="faction-input" data-value="">Любая фракция</button>
+            {% for name in available_factions %}
+            <button type="button" class="chip {% if f == name %}active{% endif %}" data-target="faction-input" data-value="{{ name }}">{{ name }}</button>
+            {% endfor %}
+        </div>
     </form>
 </div>
 
-{% for tier in ['S', 'A', 'B', 'C', 'D', 'Unranked'] %}
-    {% set chars = tiers[tier] %}
+{% for tier in ['SSS', 'SS', 'S', 'A', 'B', 'C', 'D', 'Unranked'] %}
+    {% set chars = tiers.get(tier, []) %}
     {% if chars %}
-    <div class="card tier-block">
-        <h2 class="tier-title">Tier {{ tier }}</h2>
-        <div class="character-grid">
+    <div class="tier-row">
+        <div class="tier-grid">
             {% for ch in chars %}
-            <a class="character-card" href="{{ url_for('character_detail', slug=ch.slug) }}">
-                <div class="character-card-top">
-                    <div class="character-image">
-                        {% if ch.image_name %}
-                            <img src="{{ url_for('static', filename='images/' ~ ch.image_name) }}"
-                                 alt="{{ ch.name }}">
-                        {% else %}
-                            <div class="placeholder-img">{{ ch.name[0] }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="character-title-block">
-                        <div class="character-name">{{ ch.name }}</div>
-                        <div class="character-meta">
-                            <span>{{ ch.class_name or '—' }}</span> ·
-                            <span>{{ ch.faction or '—' }}</span>
-                        </div>
-                        <div class="character-difficulty">
-                            Сложность: {{ ch.difficulty or '—' }}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="character-ratings-badges">
-                    <div class="overall-badge">
-                        <div class="overall-label">Общий ранг</div>
-                        <div class="overall-tier">{{ ch.overall_tier or '-' }}</div>
+            <a class="tier-icon" href="{{ url_for('character_detail', slug=ch.slug) }}">
+                <div class="icon-frame">
+                    {{ macros.character_image(ch.image_name, ch.name, size='icon', placeholder=ch.name[0]) }}
+                    <div class="icon-overlay">
+                        <div class="overlay-name">{{ ch.name }}</div>
+                        <div class="overlay-meta">{{ ch.class_name or '—' }} · {{ ch.faction or '—' }}</div>
+                        <div class="overlay-meta subtle">Сложность: {{ ch.difficulty or '—' }}</div>
                     </div>
                 </div>
             </a>
             {% endfor %}
         </div>
+        <div class="tier-marker tier-{{ tier|lower }}">{{ tier }}</div>
     </div>
     {% endif %}
 {% endfor %}
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('filter-form');
+    const search = document.getElementById('search');
+    let debounceId;
+
+    search.addEventListener('input', () => {
+        clearTimeout(debounceId);
+        debounceId = setTimeout(() => form.requestSubmit(), 150);
+    });
+
+    document.querySelectorAll('.chip').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = document.getElementById(btn.dataset.target);
+            const value = btn.dataset.value;
+
+            document.querySelectorAll(`.chip[data-target="${btn.dataset.target}"]`).forEach(el => el.classList.remove('active'));
+            btn.classList.add('active');
+            target.value = value;
+            form.requestSubmit();
+        });
+    });
+});
+</script>
 {% endblock %}

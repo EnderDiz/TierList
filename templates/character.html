@@ -1,15 +1,12 @@
 {% extends "base.html" %}
+{% import "_macros.html" as macros %}
 
 {% block title %}{{ character.name }}{% endblock %}
 
 {% block content %}
 <div class="card character-header">
     <div class="char-header-left">
-        {% if character.image_name %}
-            <img class="char-main-img"
-                 src="{{ url_for('static', filename='images/' ~ character.image_name) }}"
-                 alt="{{ character.name }}">
-        {% endif %}
+        {{ macros.character_image(character.image_name, character.name, size='large', placeholder=character.name[0]) }}
     </div>
     <div class="char-header-right">
         <h1>{{ character.name }}</h1>
@@ -23,9 +20,9 @@
             <div>Пассивка: {{ character.tier_passive or "-" }}</div>
             <div>Ультимейт: {{ character.tier_ultimate or "-" }}</div>
         </div>
-        {% if character.short_summary %}
-            <p class="char-summary">{{ character.short_summary }}</p>
-        {% endif %}
+        {% if character.short_summary %}␊
+            <p class="char-summary rich-text">{{ character.short_summary }}</p>
+        {% endif %}␊
     </div>
 </div>
 
@@ -46,7 +43,7 @@
                         Удары: {{ s.valid_hits or "-" }} · КД: {{ s.cooldown or "-" }}
                     </span>
                 </div>
-                <p>{{ s.description }}</p>
+                <div class="rich-text">{{ s.description }}</div>
                 {% if s.level_info %}
                     <pre class="skill-levels">{{ s.level_info }}</pre>
                 {% endif %}
@@ -57,10 +54,10 @@
 
 <div id="review" class="card">
     <h2>Обзор</h2>
-    {% if character.review %}
-        <p>{{ character.review }}</p>
-    {% else %}
-        <p>Обзор пока не добавлен.</p>
-    {% endif %}
+    {% if character.review %}␊
+        <div class="rich-text">{{ character.review }}</div>
+    {% else %}␊
+        <p>Обзор пока не добавлен.</p>␊
+    {% endif %}␊
 </div>
 {% endblock %}
