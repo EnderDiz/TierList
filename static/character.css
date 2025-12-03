@@ -17,7 +17,7 @@
 
 .char-facts {
     margin: 0 0 10px;
-    color: #4a5164;
+    color: #ffffff;
     font-weight: 600;
 }
 
@@ -26,13 +26,13 @@
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 8px;
     margin-bottom: 8px;
-    color: #2e3344;
+    color: #ffffff;
     font-weight: 600;
 }
 
 .char-summary {
     margin: 0;
-    color: #2c3242;
+    color: #ffffff;
 }
 
 .tabs {
@@ -44,18 +44,18 @@
 .tabs a {
     padding: 8px 12px;
     border-radius: 8px;
-    background: #f1f2f6;
-    border: 1px solid #d5d9e3;
+    background: #2c2d33 ;
+    border: 1px solid #33343a;
     font-weight: 700;
 }
 
 .tabs a:hover {
-    background: #e4e7f0;
+    background: #646474;
 }
 
 .skill-block {
     padding: 12px 0;
-    border-bottom: 1px solid #e2e5ed;
+    border-bottom: 1px solid #33343a;
 }
 
 .skill-block:last-child {
@@ -72,23 +72,23 @@
 
 .skill-name {
     font-weight: 800;
-    color: #141824;
+    color: #ffffff;
 }
 
 .skill-meta {
-    color: #4a5164;
+    color: #ffffff;
     font-size: 13px;
 }
 
 .skill-levels {
-    background: #f8f9fb;
+    background: #2c2d33;
     padding: 10px;
     border-radius: 8px;
-    border: 1px solid #dfe3eb;
+    border: 1px solid #33343a;
     white-space: pre-wrap;
 }
 
 .rich-text {
     line-height: 1.5;
-    color: #2c3242;
+    color: #ffffff;
 }

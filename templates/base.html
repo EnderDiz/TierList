@@ -9,19 +9,19 @@
 </head>
 <body>
 <header class="top-nav">
-    <div class="logo">My Tierlist</div>
+    <div class="logo">TierLapo4ka.gg</div>
     <nav>
-        <a href="{{ url_for('tier_list') }}">Tier List</a>
+        <a href="{{ url_for('tier_list') }}">Тирлист</a>
         {% if current_user and current_user.is_admin %}
-            <a href="{{ url_for('admin_dashboard') }}">Admin</a>
+            <a href="{{ url_for('admin_dashboard') }}">Админ</a>
         {% endif %}
     </nav>
     <div class="user-block">
         {% if current_user %}
             <span>{{ current_user.username }}</span>
-            <a href="{{ url_for('logout') }}">Logout</a>
+            <a href="{{ url_for('logout') }}">Выход</a>
         {% else %}
-            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('login') }}">Авторизация</a>
         {% endif %}
     </div>
 </header>

@@ -16,7 +16,7 @@
         <div class="filters-bar">
             <!-- Поле для текстового поиска по имени персонажа -->
             <div class="search-input">
-                <input type="text" name="search" id="search" placeholder="Search characters" value="{{ request.args.get('search', '') }}">
+                <input type="text" name="search" id="search" placeholder="Поиск персонажей..." value="{{ request.args.get('search', '') }}">
             </div>
 
             {% set f = request.args.get('faction') %}

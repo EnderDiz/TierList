@@ -4,11 +4,15 @@
    используются на всех страницах.
 ============================================ */
 
+/* #28262d rgb(40, 38, 45) верхние акценты и менюшки
+/* #646474 rgb(100, 100, 116) иконки, фон тира и выделения
+/* #23242a rgb(35, 36, 42) основная рабочая область
+
 /* === БАЗОВЫЕ СТИЛИ СТРАНИЦЫ === */
 body {
     margin: 0;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: #f2f3f7;
+    background: #23242a;
     color: #1f2430;
 }
 
@@ -26,9 +30,9 @@ a {
     align-items: center;
     justify-content: space-between;
     padding: 12px 32px;
-    background: #e6e8ed;
-    border-bottom: 1px solid #cfd3db;
-    color: #1f2430;
+    background: #28262d;
+    border-bottom: 1px solid #33343a;
+    color: #ffffff;  /* текст */
     backdrop-filter: blur(8px);
 }
 
@@ -61,11 +65,11 @@ a {
 
 /* === КАРТОЧКИ (card) === */
 .card {
-    background: #ffffff;
+    background: #1c1d21;
     border-radius: 12px;
     padding: 16px 18px;
     margin-bottom: 20px;
-    border: 1px solid #dfe3eb;
+    border: 1px solid #33343a;
     box-shadow: 0 10px 25px rgba(19, 25, 44, 0.08);
 }
 
@@ -87,13 +91,13 @@ h1, h2, h3 {
 
 .flash.success {
     background: #e7f7ee;
-    border: 1px solid #a8e0bd;
+    border: 1px solid #33343a;
     color: #1f7b45;
 }
 
 .flash.error {
     background: #fbeaea;
-    border: 1px solid #f3b3b3;
+    border: 1px solid #33343a;
     color: #b62222;
 }
 
@@ -102,7 +106,7 @@ label {
     display: block;
     font-size: 14px;
     margin-bottom: 10px;
-    color: #2c3242;
+    color: #ffffff;
 }
 
 input[type="text"],
@@ -112,7 +116,7 @@ select {
     width: 100%;
     background: #f6f7fa;
     border-radius: 8px;
-    border: 1px solid #cfd4df;
+    border: 1px solid #33343a;
     padding: 10px 12px;
     color: #1f2430;
     font: inherit;
@@ -124,7 +128,7 @@ input[type="password"]:focus,
 textarea:focus,
 select:focus {
     outline: 2px solid #aab8ff;
-    border-color: #aab8ff;
+    border-color: #33343a;
 }
 
 button,
@@ -133,7 +137,7 @@ button,
     padding: 10px 14px;
     border-radius: 8px;
     border: none;
-    background: linear-gradient(135deg, #5c74ff, #4e63e2);
+    background: #646474;
     color: #ffffff;
     font-size: 14px;
     cursor: pointer;
@@ -168,7 +172,7 @@ button:hover,
 .placeholder-img {
     display: grid;
     place-items: center;
-    background: #dfe3eb;
+    background: #646474;
     color: #4a5164;
     font-weight: 700;
 }

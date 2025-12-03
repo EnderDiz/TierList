@@ -1,4 +1,10 @@
 /* Стили страницы тир-листа */
+/* #28262d rgb(40, 38, 45) верхние акценты и менюшки
+/* #646474 rgb(100, 100, 116) иконки при наведении
+/* #23242a rgb(35, 36, 42) задний фон
+/* #33343a бордер
+/* #2c2d33 контейнер тира
+/* #F8F4FF текст
 
 /* Фильтры поиска и выбора фракции/класса */
 .tier-page {
@@ -23,8 +29,8 @@
 }
 
 .tier-filters input[type="text"] {
-    background: #f8f9fb;
-    border: 1px solid #cfd4df;
+    background: #ffffff;
+    border: 1px solid #33343a;
 }
 
 .faction-filters {
@@ -47,9 +53,9 @@
 }
 
 .chip {
-    background: #f1f2f6;
-    border: 1px solid #cfd4df;
-    color: #2e3344;
+    background: #2c2d33;
+    border: 1px solid #33343a;
+    color: #e8ebf5;
     padding: 8px 14px;
     border-radius: 999px;
     cursor: pointer;
@@ -60,14 +66,14 @@
 }
 
 .chip:hover {
-    border-color: #aab8ff;
+    border-color: #33343a;
     box-shadow: 0 6px 12px rgba(82, 99, 170, 0.15);
 }
 
 .chip.active {
-    background: #5c74ff;
-    border-color: #5c74ff;
-    color: #ffffff;
+    background: #646474;
+    border-color: #33343a;
+    color: #e8ebf5;
     box-shadow: 0 6px 14px rgba(92, 116, 255, 0.35);
 }
 
@@ -75,8 +81,8 @@
 .tier-row {
     display: flex;
     align-items: stretch;
-    background: #f9f9fc;
-    border: 1px solid #dfe3eb;
+    background: #2c2d33;
+    border: 1px solid #33343a;
     border-radius: 12px;
     overflow: hidden;
     margin-bottom: 12px;
@@ -85,7 +91,7 @@
 
 .tier-marker {
     position: relative;
-    width: 108px;
+    width: 36px;
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -95,8 +101,8 @@
     letter-spacing: 1px;
     text-transform: uppercase;
     color: #141824;
-    background: #eceef4;
-    border-right: 1px solid #d5d9e3;
+    background: var(--tier-color, #7c7f8a);
+    border-right: 1px solid #33343a;
 }
 
 .tier-marker::before {
@@ -111,12 +117,12 @@
 
 .tier-marker.tier-sss { --tier-color: #b075d9; }
 .tier-marker.tier-ss  { --tier-color: #d28a8a; }
-.tier-marker.tier-s   { --tier-color: #e1b177; }
-.tier-marker.tier-a   { --tier-color: #e8cf7d; }
-.tier-marker.tier-b   { --tier-color: #8fc48f; }
-.tier-marker.tier-c   { --tier-color: #8abbd6; }
-.tier-marker.tier-d   { --tier-color: #9b9fa7; }
-.tier-marker.tier-unranked { --tier-color: #8a8f99; }
+.tier-marker.tier-s   { --tier-color: #CA2C92; }  /*цвет Королевская фуксия*/
+.tier-marker.tier-a   { --tier-color: #E52B50; }  /*цвет Амаратовый*/
+.tier-marker.tier-b   { --tier-color: #50C878; } /*цвет Изумрудный*/
+.tier-marker.tier-c   { --tier-color: #ACE5EE; }
+.tier-marker.tier-d   { --tier-color: #FFFAFA; }
+.tier-marker.tier-unranked { --tier-color: #FAEBD7; }
 
 .tier-grid {
     flex: 1 1 auto;
@@ -137,8 +143,8 @@
     position: relative;
     border-radius: 8px;
     overflow: hidden;
-    background: #eef0f6;
-    border: 1px solid #d0d5df;
+    background: #23242a;
+    border: 1px solid #33343a;
     box-shadow: 0 6px 14px rgba(19, 25, 44, 0.1);
     width: 112px;
     height: 112px;

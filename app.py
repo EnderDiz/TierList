@@ -1,11 +1,12 @@
 # app.py
-from flask import Flask, render_template, request, redirect, url_for, flash, session
-from werkzeug.security import generate_password_hash, check_password_hash
-
-from config import Config
-from models import db, User, Character, Skill
-from auth import get_current_user, login_user, logout_user, admin_required
 import os
+
+from auth import get_current_user, login_user, logout_user, admin_required
+from config import Config
+from flask import Flask, render_template, request, redirect, url_for, flash
+from models import db, User, Character, Skill
+from werkzeug.security import check_password_hash
+
 
 def create_app():
     app = Flask(__name__)
@@ -60,10 +61,10 @@ def create_app():
         static_dir = app.static_folder or os.path.join(app.root_path, "static")
         sources = []
         for ext, mime in (
-            (".webp", "image/webp"),
-            (".png", "image/png"),
-            (".jpg", "image/jpeg"),
-            (".jpeg", "image/jpeg"),
+                (".webp", "image/webp"),
+                (".png", "image/png"),
+                (".jpg", "image/jpeg"),
+                (".jpeg", "image/jpeg"),
         ):
             candidate = os.path.join(static_dir, "images", base + ext)
             if os.path.exists(candidate):
@@ -71,6 +72,7 @@ def create_app():
         return sources
 
     app.jinja_env.globals["image_sources"] = image_sources
+
     # ------- Маршруты --------
 
     @app.route("/")
