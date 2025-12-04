@@ -29,8 +29,13 @@
 }
 
 .tier-filters input[type="text"] {
-    background: #ffffff;
+    background: #23242a;
     border: 1px solid #33343a;
+    color: #F8F4FF;
+}
+
+.tier-filters input[type="text"]::placeholder {
+    color: #cfd0d9;
 }
 
 .faction-filters {
@@ -55,7 +60,7 @@
 .chip {
     background: #2c2d33;
     border: 1px solid #33343a;
-    color: #e8ebf5;
+    color: #F8F4FF;
     padding: 8px 14px;
     border-radius: 999px;
     cursor: pointer;
@@ -100,7 +105,7 @@
     font-size: 20px;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: #141824;
+    color: #23242a;
     background: var(--tier-color, #7c7f8a);
     border-right: 1px solid #33343a;
 }

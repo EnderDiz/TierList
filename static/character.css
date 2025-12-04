@@ -17,7 +17,7 @@
 
 .char-facts {
     margin: 0 0 10px;
-    color: #ffffff;
+    color: #F8F4FF;
     font-weight: 600;
 }
 
@@ -26,13 +26,13 @@
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 8px;
     margin-bottom: 8px;
-    color: #ffffff;
+    color: #F8F4FF;
     font-weight: 600;
 }
 
 .char-summary {
     margin: 0;
-    color: #ffffff;
+    color: #F8F4FF;
 }
 
 .tabs {
@@ -47,6 +47,7 @@
     background: #2c2d33 ;
     border: 1px solid #33343a;
     font-weight: 700;
+    color: #F8F4FF;
 }
 
 .tabs a:hover {
@@ -72,11 +73,11 @@
 
 .skill-name {
     font-weight: 800;
-    color: #ffffff;
+    color: #F8F4FF;
 }
 
 .skill-meta {
-    color: #ffffff;
+    color: #F8F4FF;
     font-size: 13px;
 }
 
@@ -90,5 +91,5 @@
 
 .rich-text {
     line-height: 1.5;
-    color: #ffffff;
+    color: #F8F4FF;
 }
