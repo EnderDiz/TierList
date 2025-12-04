@@ -105,7 +105,7 @@ def create_app():
     def tier_list():
         class_name = request.args.get("class_name")
         faction = request.args.get("faction")
-        search = request.args.get("search")
+        search = (request.args.get("search") or "").strip()
 
         query = Character.query
 
@@ -185,8 +185,24 @@ def create_app():
     @app.route("/admin")
     @admin_required
     def admin_dashboard():
-        characters = Character.query.order_by(Character.name).all()
-        return render_template("admin_dashboard.html", characters=characters)
+        sort = request.args.get("sort", "name")
+        direction = request.args.get("direction", "asc")
+
+        if sort not in ("id", "name"):
+            sort = "name"
+        if direction not in ("asc", "desc"):
+            direction = "asc"
+
+        column = Character.id if sort == "id" else Character.name
+        order_clause = column.desc() if direction == "desc" else column.asc()
+
+        characters = Character.query.order_by(order_clause, Character.id.asc()).all()
+        return render_template(
+            "admin_dashboard.html",
+            characters=characters,
+            sort=sort,
+            direction=direction,
+        )
 
     @app.route("/admin/character/new", methods=["GET", "POST"])
     @admin_required
