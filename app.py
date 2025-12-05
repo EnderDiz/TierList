@@ -167,6 +167,16 @@ def create_app():
             .all()
         ]
 
+        available_difficulties = [
+            row[0]
+            for row in db.session
+            .query(Character.difficulty)
+            .filter(Character.difficulty.isnot(None))
+            .distinct()
+            .order_by(Character.difficulty)
+            .all()
+        ]
+
         return render_template(
             "tier_list.html",
             tiers=tiers,

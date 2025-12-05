@@ -50,6 +50,15 @@
                 {% endfor %}
             </div>
         </div>
+
+        {% set diff = active_difficulty %}
+        <input type="hidden" name="difficulty" value="{{ diff }}" id="difficulty-input">
+        <div class="chip-group difficulty-filters" aria-label="Сложность">
+            <button type="button" class="chip {% if not diff %}active{% endif %}" data-target="difficulty-input" data-value="">Сложность: любая</button>
+            {% for name in available_difficulties %}
+            <button type="button" class="chip {% if diff == name %}active{% endif %}" data-target="difficulty-input" data-value="{{ name }}">{{ name }}</button>
+            {% endfor %}
+        </div>
     </form>
 </div>
 
