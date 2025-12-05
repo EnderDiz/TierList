@@ -19,10 +19,10 @@ class Character(db.Model):
     class_name = db.Column(db.String(32))
     faction = db.Column(db.String(32))
 
-    tier_weapon = db.Column(db.String(1))
-    tier_skill = db.Column(db.String(1))
-    tier_passive = db.Column(db.String(1))
-    tier_ultimate = db.Column(db.String(1))
+    tier_weapon = db.Column(db.String(3))
+    tier_skill = db.Column(db.String(3))
+    tier_passive = db.Column(db.String(3))
+    tier_ultimate = db.Column(db.String(3))
 
     difficulty = db.Column(db.String(32))  # НОВОЕ: сложность освоения
 
@@ -38,7 +38,15 @@ class Character(db.Model):
     @property
     def overall_tier(self):
         """Средняя оценка для группировки по тиру."""
-        map_letter = {"D": 1, "C": 2, "B": 3, "A": 4, "S": 5}
+        map_letter = {
+            "D": 1,
+            "C": 2,
+            "B": 3,
+            "A": 4,
+            "S": 5,
+            "SS": 6,
+            "SSS": 7,
+        }
         map_back = {v: k for k, v in map_letter.items()}
 
         vals = [
