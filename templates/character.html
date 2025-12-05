@@ -24,9 +24,9 @@
             <div>Пассивка: {{ character.tier_passive or "-" }}</div>
             <div>Ультимейт: {{ character.tier_ultimate or "-" }}</div>
         </div>
-        {% if character.short_summary %}␊
+        {% if character.short_summary %}
             <p class="char-summary rich-text">{{ character.short_summary }}</p>
-        {% endif %}␊
+        {% endif %}
     </div>
 </div>
 
@@ -43,14 +43,9 @@
             <div class="skill-block">
                 <div class="skill-header">
                     <span class="skill-name">{{ s.name }}</span>
-                    <span class="skill-meta">
-                        Удары: {{ s.valid_hits or "-" }} · КД: {{ s.cooldown or "-" }}
-                    </span>
+                    <span class="skill-meta">КД: {{ s.cooldown or "-" }}</span>
                 </div>
                 <div class="rich-text">{{ s.description }}</div>
-                {% if s.level_info %}
-                    <pre class="skill-levels">{{ s.level_info }}</pre>
-                {% endif %}
             </div>
         {% endfor %}
     {% endfor %}
@@ -58,10 +53,10 @@
 
 <div id="review" class="card">
     <h2>Обзор</h2>
-    {% if character.review %}␊
+    {% if character.review %}
         <div class="rich-text">{{ character.review }}</div>
-    {% else %}␊
-        <p>Обзор пока не добавлен.</p>␊
-    {% endif %}␊
+    {% else %}
+        <p>Обзор пока не добавлен.</p>
+    {% endif %}
 </div>
 {% endblock %}

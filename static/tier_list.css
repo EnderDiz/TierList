@@ -29,8 +29,13 @@
 }
 
 .tier-filters input[type="text"] {
-    background: #ffffff;
+    background: #23242a;
     border: 1px solid #33343a;
+    color: #F8F4FF;
+}
+
+.tier-filters input[type="text"]::placeholder {
+    color: #cfd0d9;
 }
 
 .faction-filters {
@@ -52,10 +57,14 @@
     justify-content: center;
 }
 
+.difficulty-filters {
+    justify-content: center;
+}
+
 .chip {
     background: #2c2d33;
     border: 1px solid #33343a;
-    color: #e8ebf5;
+    color: #F8F4FF;
     padding: 8px 14px;
     border-radius: 999px;
     cursor: pointer;
@@ -100,7 +109,7 @@
     font-size: 20px;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: #141824;
+    color: #23242a;
     background: var(--tier-color, #7c7f8a);
     border-right: 1px solid #33343a;
 }
@@ -124,14 +133,15 @@
 .tier-marker.tier-d   { --tier-color: #FFFAFA; }
 .tier-marker.tier-unranked { --tier-color: #FAEBD7; }
 
+
 .tier-grid {
     flex: 1 1 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 14px;
     padding: 16px;
-    align-items: stretch;
-    justify-items: start;
+    align-items: flex-start;
+    justify-content: flex-start;
     text-align: left;
 }
 

@@ -4,16 +4,21 @@
    используются на всех страницах.
 ============================================ */
 
-/* #28262d rgb(40, 38, 45) верхние акценты и менюшки
-/* #646474 rgb(100, 100, 116) иконки, фон тира и выделения
-/* #23242a rgb(35, 36, 42) основная рабочая область
+/*
+#28262d rgb(40, 38, 45) верхние акценты и менюшки
+#646474 rgb(100, 100, 116) иконки при наведении
+#23242a rgb(35, 36, 42) задний фон
+#33343a бордер
+#2c2d33 контейнер тира
+#F8F4FF текст
+*/
 
 /* === БАЗОВЫЕ СТИЛИ СТРАНИЦЫ === */
 body {
     margin: 0;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     background: #23242a;
-    color: #1f2430;
+    color: #F8F4FF;
 }
 
 a {
@@ -32,7 +37,7 @@ a {
     padding: 12px 32px;
     background: #28262d;
     border-bottom: 1px solid #33343a;
-    color: #ffffff;  /* текст */
+    color: #F8F4FF;  /* текст */
     backdrop-filter: blur(8px);
 }
 
@@ -44,7 +49,7 @@ a {
 .top-nav nav a {
     margin-right: 16px;
     font-size: 14px;
-    opacity: 0.85;
+    opacity: 0.9;
 }
 
 .top-nav nav a:hover {
@@ -65,17 +70,17 @@ a {
 
 /* === КАРТОЧКИ (card) === */
 .card {
-    background: #1c1d21;
+    background: #2c2d33;
     border-radius: 12px;
     padding: 16px 18px;
     margin-bottom: 20px;
     border: 1px solid #33343a;
-    box-shadow: 0 10px 25px rgba(19, 25, 44, 0.08);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.28);
 }
 
 h1, h2, h3 {
     margin-top: 0;
-    color: #131828;
+    color: #F8F4FF;
 }
 
 .flash-container {
@@ -90,15 +95,15 @@ h1, h2, h3 {
 }
 
 .flash.success {
-    background: #e7f7ee;
+    background: rgba(100, 186, 145, 0.15);
     border: 1px solid #33343a;
-    color: #1f7b45;
+    color: #c8ffe6;
 }
 
 .flash.error {
-    background: #fbeaea;
+    background: rgba(255, 92, 92, 0.1);
     border: 1px solid #33343a;
-    color: #b62222;
+    color: #ffd2d2;
 }
 
 /* === ФОРМЫ === */
@@ -106,7 +111,7 @@ label {
     display: block;
     font-size: 14px;
     margin-bottom: 10px;
-    color: #ffffff;
+    color: #F8F4FF;
 }
 
 input[type="text"],
@@ -114,11 +119,11 @@ input[type="password"],
 textarea,
 select {
     width: 100%;
-    background: #f6f7fa;
+    background: #23242a;
     border-radius: 8px;
     border: 1px solid #33343a;
     padding: 10px 12px;
-    color: #1f2430;
+    color: #F8F4FF;
     font: inherit;
     box-sizing: border-box;
 }
@@ -137,8 +142,8 @@ button,
     padding: 10px 14px;
     border-radius: 8px;
     border: none;
-    background: #646474;
-    color: #ffffff;
+    background: #28262d;
+    color: #F8F4FF;
     font-size: 14px;
     cursor: pointer;
     margin-top: 8px;
@@ -147,7 +152,7 @@ button,
 
 button:hover,
 .btn:hover {
-    filter: brightness(1.04);
+    background: #646474;
     transform: translateY(-1px);
 }
 
@@ -156,8 +161,8 @@ button:hover,
     display: block;
     overflow: hidden;
     border-radius: 10px;
-    background: #e6e8ed;
-    box-shadow: 0 6px 12px rgba(19, 25, 44, 0.08);
+    background: #2c2d33;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
 .face-frame img,
@@ -173,7 +178,7 @@ button:hover,
     display: grid;
     place-items: center;
     background: #646474;
-    color: #4a5164;
+    color: #F8F4FF;
     font-weight: 700;
 }
 
