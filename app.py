@@ -99,20 +99,41 @@ def create_app():
 
     @app.route("/tier-list")
     def tier_list():
-        class_name = request.args.get("class_name")
-        faction = request.args.get("faction")
-        raw_difficulty = (request.args.get("difficulty") or "").strip()
-        difficulty = raw_difficulty if raw_difficulty and raw_difficulty != "*" else None
+        def requested_filter(name: str):
+            value = (request.args.get(name) or "*").strip() or "*"
+            return value
+
+        class_value = requested_filter("class_name")
+        faction_value = requested_filter("faction")
         search = (request.args.get("search") or "").strip()
+
+        difficulty_aliases = {"Для новичков": "Лёгкий"}
+
+        def canonical_difficulty(value: str | None):
+            value = (value or "").strip()
+            if not value or value == "*":
+                return None
+            return difficulty_aliases.get(value, value)
+
+        difficulty_value = (request.args.get("difficulty") or "*").strip() or "*"
+        difficulty = canonical_difficulty(difficulty_value)
+        active_difficulty_value = difficulty or "*"
 
         query = Character.query
 
-        if class_name:
-            query = query.filter(Character.class_name == class_name)
-        if faction:
-            query = query.filter(Character.faction == faction)
+        if class_value != "*":
+            query = query.filter(Character.class_name == class_value)
+        if faction_value != "*":
+            query = query.filter(Character.faction == faction_value)
         if difficulty:
-            query = query.filter(Character.difficulty == difficulty)
+            difficulty_values = {difficulty}
+            difficulty_values.update(
+                alias for alias, canonical in difficulty_aliases.items() if canonical == difficulty
+            )
+            if len(difficulty_values) == 1:
+                query = query.filter(Character.difficulty == difficulty)
+            else:
+                query = query.filter(Character.difficulty.in_(difficulty_values))
         if search:
             search_like = f"%{search}%"
             query = query.filter(Character.name.ilike(search_like))
@@ -158,17 +179,25 @@ def create_app():
             .all()
         ]
 
-        available_difficulties = sorted(
-            {
-                (row[0] or "").strip()
-                for row in db.session
+        raw_difficulty_values = {
+            (row[0] or "").strip()
+            for row in db.session
             .query(Character.difficulty)
             .filter(Character.difficulty.isnot(None))
             .distinct()
             .all()
-                if (row[0] or "").strip() and (row[0] or "").strip() != "*"
-            }
-        )
+            if (row[0] or "").strip() and (row[0] or "").strip() != "*"
+        }
+
+        normalized_difficulties = {canonical_difficulty(value) for value in raw_difficulty_values}
+        normalized_difficulties.discard(None)
+
+        preferred_order = ["Лёгкий", "Сложный", "Средний"]
+        ordered_known = [name for name in preferred_order if name in normalized_difficulties]
+        remaining = sorted(normalized_difficulties - set(preferred_order))
+        available_difficulties = ordered_known + remaining
+
+        difficulty_labels = {"Для новичков": "Лёгкий", "Лёгкий": "Лёгкий"}
 
         return render_template(
             "tier_list.html",
@@ -176,7 +205,10 @@ def create_app():
             available_classes=available_classes,
             available_factions=available_factions,
             available_difficulties=available_difficulties,
-            active_difficulty=difficulty or "",
+            active_class=class_value,
+            active_faction=faction_value,
+            active_difficulty=active_difficulty_value,
+            difficulty_labels=difficulty_labels,
         )
 
     @app.route("/character/<slug>")
@@ -202,15 +234,34 @@ def create_app():
         sort = request.args.get("sort", "name")
         direction = request.args.get("direction", "asc")
 
-        if sort not in ("id", "name"):
+        allowed_sorts = {
+            "id": Character.id,
+            "name": Character.name,
+            "class_name": Character.class_name,
+            "faction": Character.faction,
+            "overall_tier": None,
+        }
+
+        if sort not in allowed_sorts:
             sort = "name"
         if direction not in ("asc", "desc"):
             direction = "asc"
 
-        column = Character.id if sort == "id" else Character.name
-        order_clause = column.desc() if direction == "desc" else column.asc()
+        if sort == "overall_tier":
+            characters = Character.query.all()
+            tier_weights = {"D": 1, "C": 2, "B": 3, "A": 4, "S": 5, "SS": 6, "SSS": 7}
+            none_sentinel = float("-inf") if direction == "desc" else float("inf")
 
-        characters = Character.query.order_by(order_clause, Character.id.asc()).all()
+            def tier_key(ch):
+                value = tier_weights.get(ch.overall_tier, none_sentinel)
+                return (value, ch.id)
+
+            characters.sort(key=tier_key, reverse=direction == "desc")
+        else:
+            column = allowed_sorts[sort]
+            order_clause = column.desc() if direction == "desc" else column.asc()
+            characters = Character.query.order_by(order_clause, Character.id.asc()).all()
+
         return render_template(
             "admin_dashboard.html",
             characters=characters,

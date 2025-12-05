@@ -92,12 +92,13 @@
                        value="{{ character.image_name.rsplit('.', 1)[0] if character and character.image_name else '' }}">
             </label>
             <label>Сложность освоения
-                {% set diff = character.difficulty if character else '' %}
+                {% set raw_diff = character.difficulty if character else '' %}
+                {% set diff = 'Лёгкий' if raw_diff == 'Для новичков' else raw_diff %}
                 <select name="difficulty">
                     <option value="">Не указана</option>
-                    <option value="Для новичков" {% if diff=='Для новичков' %}selected{% endif %}>Для новичков</option>
-                    <option value="Средний" {% if diff=='Средний' %}selected{% endif %}>Средний</option>
+                    <option value="Лёгкий" {% if diff=='Лёгкий' %}selected{% endif %}>Лёгкий</option>
                     <option value="Сложный" {% if diff=='Сложный' %}selected{% endif %}>Сложный</option>
+                    <option value="Средний" {% if diff=='Средний' %}selected{% endif %}>Средний</option>
                 </select>
             </label>
         </div>

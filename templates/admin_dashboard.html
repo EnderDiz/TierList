@@ -15,6 +15,9 @@
         <tr>
             {% set next_id_dir = 'desc' if sort == 'id' and direction == 'asc' else 'asc' %}
             {% set next_name_dir = 'desc' if sort == 'name' and direction == 'asc' else 'asc' %}
+            {% set next_class_dir = 'desc' if sort == 'class_name' and direction == 'asc' else 'asc' %}
+            {% set next_faction_dir = 'desc' if sort == 'faction' and direction == 'asc' else 'asc' %}
+            {% set next_overall_dir = 'desc' if sort == 'overall_tier' and direction == 'asc' else 'asc' %}
             <th>
                 <a class="sort-link{% if sort == 'id' %} active{% endif %}"
                    href="{{ url_for('admin_dashboard', sort='id', direction=next_id_dir) }}">
@@ -33,11 +36,33 @@
                     {% endif %}
                 </a>
             </th>
-            <th>Slug</th>
-            <th>Класс</th>
-            <th>Фракция</th>
-            <th>Итоговый тир</th>
-            <th></th>
+            <th>
+                <a class="sort-link{% if sort == 'class_name' %} active{% endif %}"
+                   href="{{ url_for('admin_dashboard', sort='class_name', direction=next_class_dir) }}">
+                    Класс
+                    {% if sort == 'class_name' %}
+                        <span class="sort-indicator">{{ '↑' if direction == 'asc' else '↓' }}</span>
+                    {% endif %}
+                </a>
+            </th>
+            <th>
+                <a class="sort-link{% if sort == 'faction' %} active{% endif %}"
+                   href="{{ url_for('admin_dashboard', sort='faction', direction=next_faction_dir) }}">
+                    Фракция
+                    {% if sort == 'faction' %}
+                        <span class="sort-indicator">{{ '↑' if direction == 'asc' else '↓' }}</span>
+                    {% endif %}
+                </a>
+            </th>
+            <th>
+                <a class="sort-link{% if sort == 'overall_tier' %} active{% endif %}"
+                   href="{{ url_for('admin_dashboard', sort='overall_tier', direction=next_overall_dir) }}">
+                    Итоговый тир
+                    {% if sort == 'overall_tier' %}
+                        <span class="sort-indicator">{{ '↑' if direction == 'asc' else '↓' }}</span>
+                    {% endif %}
+                </a>
+            </th>
         </tr>
         </thead>
         <tbody>
@@ -45,7 +70,6 @@
         <tr>
             <td>{{ ch.id }}</td>
             <td>{{ ch.name }}</td>
-            <td>{{ ch.slug }}</td>
             <td>{{ ch.class_name or '—' }}</td>
             <td>{{ ch.faction or '—' }}</td>
             <td>{{ ch.overall_tier or '-' }}</td>

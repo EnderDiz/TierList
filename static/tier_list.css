@@ -71,10 +71,6 @@
     flex: 1 1 240px;
 }
 
-.difficulty-filters {
-    justify-content: center;
-}
-
 .chip {
     background: #2c2d33;
     border: 1px solid #33343a;

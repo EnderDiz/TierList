@@ -9,7 +9,7 @@
 </head>
 <body>
 <header class="top-nav">
-    <div class="logo">TierLapo4ka.gg</div>
+    <a class="logo" href="{{ url_for('tier_list') }}">TierLapo4ka.gg</a>
     <nav>
         <a href="{{ url_for('tier_list') }}">Тирлист</a>
         {% if current_user and current_user.is_admin %}

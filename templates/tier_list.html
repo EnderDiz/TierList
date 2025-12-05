@@ -19,11 +19,11 @@
                 <input type="text" name="search" id="search" placeholder="Поиск персонажей..." value="{{ request.args.get('search', '') }}">
             </div>
 
-            {% set f = request.args.get('faction') %}
+            {% set f = active_faction %}
             <input type="hidden" name="faction" value="{{ f }}" id="faction-input">
             <!-- Кнопки выбора фракции: справа от поиска, * означает любую фракцию -->
             <div class="chip-group faction-filters" aria-label="Фракция">
-                <button type="button" class="chip {% if not f %}active{% endif %}" data-target="faction-input" data-value="">*</button>
+                <button type="button" class="chip {% if f == '*' %}active{% endif %}" data-target="faction-input" data-value="*">*</button>
                 {% for name in available_factions %}
                 <button type="button" class="chip {% if f == name %}active{% endif %}" data-target="faction-input" data-value="{{ name }}">{{ name }}</button>
                 {% endfor %}
@@ -31,11 +31,11 @@
         </div>
 
         <div class="filters-row">
-            {% set cls = request.args.get('class_name') %}
+            {% set cls = active_class %}
             <input type="hidden" name="class_name" value="{{ cls }}" id="class-input">
             <!-- Кнопки выбора класса: располагаются под строкой поиска, * означает любой класс -->
             <div class="chip-group class-filters" aria-label="Класс">
-                <button type="button" class="chip {% if not cls %}active{% endif %}" data-target="class-input" data-value="">*</button>
+                <button type="button" class="chip {% if cls == '*' %}active{% endif %}" data-target="class-input" data-value="*">*</button>
                 {% for name in available_classes %}
                 <button type="button" class="chip {% if cls == name %}active{% endif %}" data-target="class-input" data-value="{{ name }}">{{ name }}</button>
                 {% endfor %}
@@ -44,20 +44,10 @@
             {% set diff = active_difficulty %}
             <input type="hidden" name="difficulty" value="{{ diff }}" id="difficulty-input">
             <div class="chip-group difficulty-filters" aria-label="Сложность">
-                <button type="button" class="chip {% if not diff %}active{% endif %}" data-target="difficulty-input" data-value="">*</button>
+                <button type="button" class="chip {% if diff == '*' %}active{% endif %}" data-target="difficulty-input" data-value="*">*</button>
                 {% for name in available_difficulties %}
-                <button type="button" class="chip {% if diff == name %}active{% endif %}" data-target="difficulty-input" data-value="{{ name }}">{{ name }}</button>
-                {% endfor %}
+                <button type="button" class="chip {% if diff == name %}active{% endif %}" data-target="difficulty-input" data-value="{{ name }}">{{ difficulty_labels.get(name, name) }}</button>                {% endfor %}
             </div>
-        </div>
-
-        {% set diff = active_difficulty %}
-        <input type="hidden" name="difficulty" value="{{ diff }}" id="difficulty-input">
-        <div class="chip-group difficulty-filters" aria-label="Сложность">
-            <button type="button" class="chip {% if not diff %}active{% endif %}" data-target="difficulty-input" data-value="">Сложность: любая</button>
-            {% for name in available_difficulties %}
-            <button type="button" class="chip {% if diff == name %}active{% endif %}" data-target="difficulty-input" data-value="{{ name }}">{{ name }}</button>
-            {% endfor %}
         </div>
     </form>
 </div>
@@ -81,7 +71,7 @@
                         <div class="overlay-meta overlay-tags">
                             <span class="tag">{{ ch.faction or '—' }}</span>
                             <span class="tag">{{ ch.class_name or '—' }}</span>
-                            <span class="tag">{{ ch.difficulty or '—' }}</span>
+                            <span class="tag">{{ difficulty_labels.get(ch.difficulty, ch.difficulty or '—') }}</span>
                         </div>
                         <div class="overlay-ratings">
                             <div class="rating-pill tier-pill tier-{{ (ch.tier_weapon or 'none')|lower }}">Оружие: {{ ch.tier_weapon or '-' }}</div>
@@ -106,7 +96,7 @@
         let debounceId;
 
         const submitWithCurrentFilters = () => {
-            const params = new URLSearchParams();
+            const params = new URLSearchParams(window.location.search);
             const formData = new FormData(form);
 
             formData.forEach((value, key) => {
