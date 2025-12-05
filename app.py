@@ -33,9 +33,7 @@ def create_app():
         names = form.getlist("skill_name")
         types = form.getlist("skill_type")
         descriptions = form.getlist("skill_description")
-        valid_hits = form.getlist("skill_valid_hits")
         cooldowns = form.getlist("skill_cooldown")
-        levels = form.getlist("skill_level_info")
         ids = form.getlist("skill_id")
 
         skills = []
@@ -47,9 +45,7 @@ def create_app():
                 "name": name.strip(),
                 "type": types[idx].strip() if idx < len(types) else None,
                 "description": descriptions[idx].strip() if idx < len(descriptions) else None,
-                "valid_hits": valid_hits[idx].strip() if idx < len(valid_hits) else None,
                 "cooldown": cooldowns[idx].strip() if idx < len(cooldowns) else None,
-                "level_info": levels[idx].strip() if idx < len(levels) else None,
             })
         return skills
 
@@ -105,6 +101,7 @@ def create_app():
     def tier_list():
         class_name = request.args.get("class_name")
         faction = request.args.get("faction")
+        difficulty = request.args.get("difficulty")
         search = (request.args.get("search") or "").strip()
 
         query = Character.query
@@ -113,6 +110,8 @@ def create_app():
             query = query.filter(Character.class_name == class_name)
         if faction:
             query = query.filter(Character.faction == faction)
+        if difficulty:
+            query = query.filter(Character.difficulty == difficulty)
         if search:
             search_like = f"%{search}%"
             query = query.filter(Character.name.ilike(search_like))
@@ -158,11 +157,23 @@ def create_app():
             .all()
         ]
 
+        available_difficulties = [
+            row[0]
+            for row in db.session
+            .query(Character.difficulty)
+            .filter(Character.difficulty.isnot(None))
+            .distinct()
+            .order_by(Character.difficulty)
+            .all()
+        ]
+
         return render_template(
             "tier_list.html",
             tiers=tiers,
             available_classes=available_classes,
             available_factions=available_factions,
+            available_difficulties=available_difficulties,
+            active_difficulty=difficulty,
         )
 
     @app.route("/character/<slug>")
@@ -247,9 +258,7 @@ def create_app():
                     name=s["name"],
                     type=s.get("type"),
                     description=s.get("description"),
-                    valid_hits=s.get("valid_hits"),
                     cooldown=s.get("cooldown"),
-                    level_info=s.get("level_info"),
                 ))
             db.session.add(ch)
             db.session.commit()
@@ -298,9 +307,7 @@ def create_app():
                 skill.name = payload.get("name")
                 skill.type = payload.get("type")
                 skill.description = payload.get("description")
-                skill.valid_hits = payload.get("valid_hits")
                 skill.cooldown = payload.get("cooldown")
-                skill.level_info = payload.get("level_info")
 
             for skill in list(ch.skills):
                 if skill.id and str(skill.id) not in kept_ids and str(skill.id) in existing_by_id:

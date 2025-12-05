@@ -39,6 +39,15 @@
             <button type="button" class="chip {% if cls == name %}active{% endif %}" data-target="class-input" data-value="{{ name }}">{{ name }}</button>
             {% endfor %}
         </div>
+
+        {% set diff = active_difficulty %}
+        <input type="hidden" name="difficulty" value="{{ diff }}" id="difficulty-input">
+        <div class="chip-group difficulty-filters" aria-label="Сложность">
+            <button type="button" class="chip {% if not diff %}active{% endif %}" data-target="difficulty-input" data-value="">Сложность: любая</button>
+            {% for name in available_difficulties %}
+            <button type="button" class="chip {% if diff == name %}active{% endif %}" data-target="difficulty-input" data-value="{{ name }}">{{ name }}</button>
+            {% endfor %}
+        </div>
     </form>
 </div>
 
@@ -67,30 +76,43 @@
 {% endfor %}
 
 <script>
-// Обработчики для поиска и переключателей фракции/класса
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('filter-form');
-    const search = document.getElementById('search');
-    let debounceId;
+    // Обработчики для поиска и переключателей фракции/класса
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('filter-form');
+        const search = document.getElementById('search');
+        let debounceId;
 
-    // Отправляем форму с задержкой, чтобы не спамить запросы при вводе
-    search.addEventListener('input', () => {
-        clearTimeout(debounceId);
-        debounceId = setTimeout(() => form.requestSubmit(), 150);
-    });
+        const submitWithCurrentFilters = () => {
+            const url = new URL(window.location.href);
+            const params = new URLSearchParams(url.search);
+            const formData = new FormData(form);
 
-    // Переключение активного чипа и отправка формы
-    document.querySelectorAll('.chip').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const target = document.getElementById(btn.dataset.target);
-            const value = btn.dataset.value;
+            formData.forEach((value, key) => {
+                params.set(key, value);
+            });
 
-            document.querySelectorAll(`.chip[data-target="${btn.dataset.target}"]`).forEach(el => el.classList.remove('active'));
-            btn.classList.add('active');
-            target.value = value;
-            form.requestSubmit();
+            url.search = params.toString();
+            window.location.href = url.toString();
+        };
+
+        // Отправляем форму с задержкой, чтобы не спамить запросы при вводе
+        search.addEventListener('input', () => {
+            clearTimeout(debounceId);
+            debounceId = setTimeout(submitWithCurrentFilters, 150);
+        });
+
+        // Переключение активного чипа и отправка формы
+        document.querySelectorAll('.chip').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = document.getElementById(btn.dataset.target);
+                const value = btn.dataset.value;
+
+                document.querySelectorAll(`.chip[data-target="${btn.dataset.target}"]`).forEach(el => el.classList.remove('active'));
+                btn.classList.add('active');
+                target.value = value;
+                submitWithCurrentFilters();
+            });
         });
     });
-});
 </script>
 {% endblock %}
