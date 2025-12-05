@@ -102,12 +102,13 @@
 
 /* === ТИРЫ И ИКОНКИ === */
 .tier-row {
+    position: relative;
     display: flex;
     align-items: stretch;
     background: #2c2d33;
     border: 1px solid #33343a;
     border-radius: 12px;
-    overflow: hidden;
+    overflow: visible;
     margin-bottom: 12px;
     box-shadow: 0 10px 24px rgba(19, 25, 44, 0.08);
 }
@@ -172,6 +173,7 @@
     box-shadow: 0 6px 14px rgba(19, 25, 44, 0.1);
     width: 112px;
     height: 112px;
+    z-index: 1;
 }
 
 .icon-frame::after {
@@ -214,14 +216,16 @@
     padding: 12px 10px;
     gap: 8px;
     transition: opacity 0.12s ease;
-    z-index: 2;
+    z-index: 40;
     pointer-events: none;
     color: #F8F4FF;
     text-align: center;
+    box-shadow: 0 14px 30px rgba(9, 12, 20, 0.45);
 }
 
 .tier-icon:hover .icon-overlay {
     opacity: 1;
+    z-index: 50;
 }
 
 .overlay-avatar .face-frame-small {
@@ -268,16 +272,17 @@
     border-radius: 8px;
     text-align: center;
     font-size: 12px;
+    color: #23242a;
     font-weight: 800;
     border: 1px solid #33343a;
     background: #23242a;
 }
 
-.tier-pill.tier-d { background: linear-gradient(180deg, #373840 0%, #2c2d33 100%); }
-.tier-pill.tier-c { background: linear-gradient(180deg, #42525f 0%, #2c2d33 100%); }
-.tier-pill.tier-b { background: linear-gradient(180deg, #2f6046 0%, #2c2d33 100%); }
-.tier-pill.tier-a { background: linear-gradient(180deg, #7a2b36 0%, #2c2d33 100%); }
-.tier-pill.tier-s { background: linear-gradient(180deg, #5c274f 0%, #2c2d33 100%); }
-.tier-pill.tier-ss { background: linear-gradient(180deg, #6d3c92 0%, #2c2d33 100%); }
-.tier-pill.tier-sss { background: linear-gradient(180deg, #9f62c9 0%, #2c2d33 100%); }
+.tier-pill.tier-d { background: #FFFAFA; }
+.tier-pill.tier-c { background: #ACE5EE; }
+.tier-pill.tier-b { background: #50C878; }
+.tier-pill.tier-a { background: #E52B50; }
+.tier-pill.tier-s { background: #CA2C92; }
+.tier-pill.tier-ss { background: #d28a8a; }
+.tier-pill.tier-sss { background: #b075d9; }
 .tier-pill.tier-none { opacity: 0.8; }

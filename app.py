@@ -101,7 +101,8 @@ def create_app():
     def tier_list():
         class_name = request.args.get("class_name")
         faction = request.args.get("faction")
-        difficulty = request.args.get("difficulty")
+        raw_difficulty = (request.args.get("difficulty") or "").strip()
+        difficulty = raw_difficulty if raw_difficulty and raw_difficulty != "*" else None
         search = (request.args.get("search") or "").strip()
 
         query = Character.query
@@ -157,25 +158,17 @@ def create_app():
             .all()
         ]
 
-        available_difficulties = [
-            row[0]
-            for row in db.session
+        available_difficulties = sorted(
+            {
+                (row[0] or "").strip()
+                for row in db.session
             .query(Character.difficulty)
             .filter(Character.difficulty.isnot(None))
             .distinct()
-            .order_by(Character.difficulty)
             .all()
-        ]
-
-        available_difficulties = [
-            row[0]
-            for row in db.session
-            .query(Character.difficulty)
-            .filter(Character.difficulty.isnot(None))
-            .distinct()
-            .order_by(Character.difficulty)
-            .all()
-        ]
+                if (row[0] or "").strip() and (row[0] or "").strip() != "*"
+            }
+        )
 
         return render_template(
             "tier_list.html",
@@ -183,7 +176,7 @@ def create_app():
             available_classes=available_classes,
             available_factions=available_factions,
             available_difficulties=available_difficulties,
-            active_difficulty=difficulty,
+            active_difficulty=difficulty or "",
         )
 
     @app.route("/character/<slug>")
