@@ -50,11 +50,12 @@
             {% set ts = character.tier_skill if character else '' %}
             {% set tp = character.tier_passive if character else '' %}
             {% set tu = character.tier_ultimate if character else '' %}
+            {% set tier_options = ['D','C','B','A','S','SS','SSS'] %}
 
             <label>Тир (Оружие)
                 <select name="tier_weapon">
                     <option value="">-</option>
-                    {% for v in ['D','C','B','A','S'] %}
+                    {% for v in tier_options %}
                     <option value="{{ v }}" {% if tw==v %}selected{% endif %}>{{ v }}</option>
                     {% endfor %}
                 </select>
@@ -63,7 +64,7 @@
             <label>Тир (Навык)
                 <select name="tier_skill">
                     <option value="">-</option>
-                    {% for v in ['D','C','B','A','S'] %}
+                    {% for v in tier_options %}
                     <option value="{{ v }}" {% if ts==v %}selected{% endif %}>{{ v }}</option>
                     {% endfor %}
                 </select>
@@ -72,7 +73,7 @@
             <label>Тир (Пассивная способность)
                 <select name="tier_passive">
                     <option value="">-</option>
-                    {% for v in ['D','C','B','A','S'] %}
+                    {% for v in tier_options %}
                     <option value="{{ v }}" {% if tp==v %}selected{% endif %}>{{ v }}</option>
                     {% endfor %}
                 </select>
@@ -81,7 +82,7 @@
             <label>Тир (Ультимейт)
                 <select name="tier_ultimate">
                     <option value="">-</option>
-                    {% for v in ['D','C','B','A','S'] %}
+                    {% for v in tier_options %}
                     <option value="{{ v }}" {% if tu==v %}selected{% endif %}>{{ v }}</option>
                     {% endfor %}
                 </select>
@@ -127,16 +128,8 @@
                         <label>Описание
                             <textarea name="skill_description" rows="3" placeholder="Кратко опишите механику">{{ skill.description if skill else '' }}</textarea>
                         </label>
-                        <div class="form-grid">
-                            <label>Количество ударов
-                                <input type="text" name="skill_valid_hits" value="{{ skill.valid_hits if skill else '' }}" placeholder="Напр. 3">
-                            </label>
-                            <label>Кулдаун
-                                <input type="text" name="skill_cooldown" value="{{ skill.cooldown if skill else '' }}" placeholder="Напр. 12с">
-                            </label>
-                        </div>
-                        <label>Прокачка по уровням
-                            <textarea name="skill_level_info" rows="3" placeholder="Lv.1 ...">{{ skill.level_info if skill else '' }}</textarea>
+                        <label>Кулдаун
+                            <input type="text" name="skill_cooldown" value="{{ skill.cooldown if skill else '' }}" placeholder="Напр. 12с">
                         </label>
                     </div>
                 {% endfor %}
@@ -158,16 +151,8 @@
             <label>Описание
                 <textarea name="skill_description" rows="3" placeholder="Кратко опишите механику"></textarea>
             </label>
-            <div class="form-grid">
-                <label>Количество ударов
-                    <input type="text" name="skill_valid_hits" value="" placeholder="Напр. 3">
-                </label>
-                <label>Кулдаун
-                    <input type="text" name="skill_cooldown" value="" placeholder="Напр. 12с">
-                </label>
-            </div>
-            <label>Прокачка по уровням
-                <textarea name="skill_level_info" rows="3" placeholder="Lv.1 ..."></textarea>
+            <label>Кулдаун
+                <input type="text" name="skill_cooldown" value="" placeholder="Напр. 12с">
             </label>
         </div>
     </template>

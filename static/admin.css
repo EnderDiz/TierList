@@ -11,11 +11,13 @@
     padding: 10px;
     text-align: left;
     border-bottom: 1px solid #33343a;
+    color: #F8F4FF;
 }
 
 .admin-table th {
     background: #28262d;
     font-weight: 800;
+    color: #F8F4FF;
 }
 
 .admin-table tr:hover td {
@@ -60,10 +62,26 @@
 
 .btn-ghost {
     background: transparent;
-    color: #ffffff;
+    color: #F8F4FF;
     border: 1px solid #33343a;
 }
 
 .btn-ghost:hover {
-    background: #e4e7f0;
+    background: #646474;
+}
+
+.sort-link {
+    color: #F8F4FF;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.sort-link.active {
+    font-weight: 800;
+}
+
+.sort-link .sort-indicator {
+    font-size: 12px;
+    opacity: 0.85;
 }

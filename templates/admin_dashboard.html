@@ -13,8 +13,26 @@
     <table class="admin-table">
         <thead>
         <tr>
-            <th>ID</th>
-            <th>Имя</th>
+            {% set next_id_dir = 'desc' if sort == 'id' and direction == 'asc' else 'asc' %}
+            {% set next_name_dir = 'desc' if sort == 'name' and direction == 'asc' else 'asc' %}
+            <th>
+                <a class="sort-link{% if sort == 'id' %} active{% endif %}"
+                   href="{{ url_for('admin_dashboard', sort='id', direction=next_id_dir) }}">
+                    ID
+                    {% if sort == 'id' %}
+                        <span class="sort-indicator">{{ '↑' if direction == 'asc' else '↓' }}</span>
+                    {% endif %}
+                </a>
+            </th>
+            <th>
+                <a class="sort-link{% if sort == 'name' %} active{% endif %}"
+                   href="{{ url_for('admin_dashboard', sort='name', direction=next_name_dir) }}">
+                    Имя
+                    {% if sort == 'name' %}
+                        <span class="sort-indicator">{{ '↑' if direction == 'asc' else '↓' }}</span>
+                    {% endif %}
+                </a>
+            </th>
             <th>Slug</th>
             <th>Класс</th>
             <th>Фракция</th>

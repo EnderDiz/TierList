@@ -30,14 +30,25 @@
             </div>
         </div>
 
-        {% set cls = request.args.get('class_name') %}
-        <input type="hidden" name="class_name" value="{{ cls }}" id="class-input">
-        <!-- Кнопки выбора класса: располагаются под строкой поиска, * означает любой класс -->
-        <div class="chip-group class-filters" aria-label="Класс">
-            <button type="button" class="chip {% if not cls %}active{% endif %}" data-target="class-input" data-value="">*</button>
-            {% for name in available_classes %}
-            <button type="button" class="chip {% if cls == name %}active{% endif %}" data-target="class-input" data-value="{{ name }}">{{ name }}</button>
-            {% endfor %}
+        <div class="filters-row">
+            {% set cls = request.args.get('class_name') %}
+            <input type="hidden" name="class_name" value="{{ cls }}" id="class-input">
+            <!-- Кнопки выбора класса: располагаются под строкой поиска, * означает любой класс -->
+            <div class="chip-group class-filters" aria-label="Класс">
+                <button type="button" class="chip {% if not cls %}active{% endif %}" data-target="class-input" data-value="">*</button>
+                {% for name in available_classes %}
+                <button type="button" class="chip {% if cls == name %}active{% endif %}" data-target="class-input" data-value="{{ name }}">{{ name }}</button>
+                {% endfor %}
+            </div>
+
+            {% set diff = active_difficulty %}
+            <input type="hidden" name="difficulty" value="{{ diff }}" id="difficulty-input">
+            <div class="chip-group difficulty-filters" aria-label="Сложность">
+                <button type="button" class="chip {% if not diff %}active{% endif %}" data-target="difficulty-input" data-value="">*</button>
+                {% for name in available_difficulties %}
+                <button type="button" class="chip {% if diff == name %}active{% endif %}" data-target="difficulty-input" data-value="{{ name }}">{{ name }}</button>
+                {% endfor %}
+            </div>
         </div>
     </form>
 </div>
@@ -54,9 +65,21 @@
                 <div class="icon-frame">
                     {{ macros.character_image(ch.image_name, ch.name, size='icon', placeholder=ch.name[0]) }}
                     <div class="icon-overlay">
+                        <div class="overlay-avatar">
+                            {{ macros.character_image(ch.image_name, ch.name, size='small', placeholder=ch.name[0]) }}
+                        </div>
                         <div class="overlay-name">{{ ch.name }}</div>
-                        <div class="overlay-meta">{{ ch.class_name or '—' }} · {{ ch.faction or '—' }}</div>
-                        <div class="overlay-meta subtle">Сложность: {{ ch.difficulty or '—' }}</div>
+                        <div class="overlay-meta overlay-tags">
+                            <span class="tag">{{ ch.faction or '—' }}</span>
+                            <span class="tag">{{ ch.class_name or '—' }}</span>
+                            <span class="tag">{{ ch.difficulty or '—' }}</span>
+                        </div>
+                        <div class="overlay-ratings">
+                            <div class="rating-pill tier-pill tier-{{ (ch.tier_weapon or 'none')|lower }}">Оружие: {{ ch.tier_weapon or '-' }}</div>
+                            <div class="rating-pill tier-pill tier-{{ (ch.tier_skill or 'none')|lower }}">Навык: {{ ch.tier_skill or '-' }}</div>
+                            <div class="rating-pill tier-pill tier-{{ (ch.tier_passive or 'none')|lower }}">Пассивка: {{ ch.tier_passive or '-' }}</div>
+                            <div class="rating-pill tier-pill tier-{{ (ch.tier_ultimate or 'none')|lower }}">Ультимейт: {{ ch.tier_ultimate or '-' }}</div>
+                        </div>
                     </div>
                 </div>
             </a>
@@ -67,30 +90,43 @@
 {% endfor %}
 
 <script>
-// Обработчики для поиска и переключателей фракции/класса
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('filter-form');
-    const search = document.getElementById('search');
-    let debounceId;
+    // Обработчики для поиска и переключателей фракции/класса
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.getElementById('filter-form');
+        const search = document.getElementById('search');
+        let debounceId;
 
-    // Отправляем форму с задержкой, чтобы не спамить запросы при вводе
-    search.addEventListener('input', () => {
-        clearTimeout(debounceId);
-        debounceId = setTimeout(() => form.requestSubmit(), 150);
-    });
+        const submitWithCurrentFilters = () => {
+            const params = new URLSearchParams();
+            const formData = new FormData(form);
 
-    // Переключение активного чипа и отправка формы
-    document.querySelectorAll('.chip').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const target = document.getElementById(btn.dataset.target);
-            const value = btn.dataset.value;
+            formData.forEach((value, key) => {
+                params.set(key, value);
+            });
 
-            document.querySelectorAll(`.chip[data-target="${btn.dataset.target}"]`).forEach(el => el.classList.remove('active'));
-            btn.classList.add('active');
-            target.value = value;
-            form.requestSubmit();
+            const url = new URL(window.location.href);
+            url.search = params.toString();
+            window.location.href = url.toString();
+        };
+
+        // Отправляем форму с задержкой, чтобы не спамить запросы при вводе
+        search.addEventListener('input', () => {
+            clearTimeout(debounceId);
+            debounceId = setTimeout(submitWithCurrentFilters, 150);
+        });
+
+        // Переключение активного чипа и отправка формы
+        document.querySelectorAll('.chip').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = document.getElementById(btn.dataset.target);
+                const value = btn.dataset.value;
+
+                document.querySelectorAll(`.chip[data-target="${btn.dataset.target}"]`).forEach(el => el.classList.remove('active'));
+                btn.classList.add('active');
+                target.value = value;
+                submitWithCurrentFilters();
+            });
         });
     });
-});
 </script>
 {% endblock %}
