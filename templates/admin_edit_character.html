@@ -99,7 +99,7 @@
             </label>
             <label>Имя файла изображения (без расширения)
                 <input type="text" name="image_name"
-                       value="{{ character.image_name.rsplit('.', 1)[0] if character and character.image_name else '' }}">
+                       value="{{ character.image_name if character and character.image_name else '' }}">
             </label>
             <label>Сложность освоения
                 {% set raw_diff = character.difficulty if character else '' %}

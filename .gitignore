@@ -1,0 +1,18 @@
+# Кэш и временные файлы
+__pycache__/
+*.pyc
+.env
+
+# Базы данных и резервные копии
+/database/*.db
+/database/backups/*.db
+!/database/.gitkeep
+!/database/backups/.gitkeep
+
+# Пользовательские изображения
+/media/images/*
+!/media/images/.gitkeep
+
+# Среды и IDE
+.vscode/
+.idea/

@@ -3,10 +3,10 @@
     {% if sources %}
     <picture class="face-frame face-frame-{{ size }}">
         {% for source in sources if source.mime != 'image/png' %}
-            <source srcset="{{ url_for('static', filename=source.path) }}" type="{{ source.mime }}">
+            <source srcset="{{ url_for('media_image', filename=source.path) }}" type="{{ source.mime }}">
         {% endfor %}
         {% set fallback = sources|last %}
-        <img src="{{ url_for('static', filename=fallback.path) }}" alt="{{ alt }}" loading="lazy">
+        <img src="{{ url_for('media_image', filename=fallback.path) }}" alt="{{ alt }}" loading="lazy">
     </picture>
     {% else %}
     <div class="placeholder-img face-frame face-frame-{{ size }}">{{ placeholder }}</div>
