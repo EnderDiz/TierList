@@ -255,10 +255,35 @@ def create_app():
         for s in ch.skills:
             skills_by_type.setdefault(s.type or "Other", []).append(s)
 
+        skill_preferences = [
+            (["Пассивка", "Пассивный", "Passive", "Пассивная способность"], "Пассивный навык"),
+            (["Навык", "Skill", "Обычный", "Базовый", "Активный"], "Обычный навык"),
+            (["Ультимейт", "Ульта", "Ultimate", "Сигнатурный"], "Ультимативный навык"),
+        ]
+
+        used_skill_types = set()
+        ordered_skill_groups = []
+
+        for keys, label in skill_preferences:
+            group_skills = []
+            for key in keys:
+                if key in skills_by_type and key not in used_skill_types:
+                    group_skills.extend(skills_by_type[key])
+                    used_skill_types.add(key)
+            ordered_skill_groups.append({"label": label, "skills": group_skills})
+
+        additional_skill_groups = [
+            {"label": skill_type, "skills": skills}
+            for skill_type, skills in skills_by_type.items()
+            if skill_type not in used_skill_types
+        ]
+
         return render_template(
             "character.html",
             character=ch,
-            skills_by_type=skills_by_type
+            skills_by_type=skills_by_type,
+            skill_groups=ordered_skill_groups,
+            additional_skill_groups=additional_skill_groups,
         )
 
     # ------- Админка --------
