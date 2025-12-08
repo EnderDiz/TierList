@@ -11,6 +11,14 @@
     justify-self: center;
 }
 
+.char-meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
 .char-header-right h1 {
     margin-bottom: 6px;
 }
@@ -21,76 +29,214 @@
     font-weight: 600;
 }
 
-.char-balance {
-    margin: 0 0 10px;
-}
-
-.char-ratings {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 8px;
-    margin-bottom: 8px;
-    color: #F8F4FF;
-    font-weight: 600;
-}
-
 .char-summary {
     margin: 0;
     color: #F8F4FF;
 }
 
-.tabs {
-    display: flex;
-    gap: 10px;
-    margin: 0 0 16px;
-}
-
-.tabs a {
-    padding: 8px 12px;
-    border-radius: 8px;
-    background: #2c2d33 ;
+.tab-switch {
+    display: inline-flex;
+    gap: 8px;
+    margin: 12px 0 16px;
+    background: #2c2d33;
     border: 1px solid #33343a;
-    font-weight: 700;
+    padding: 6px;
+    border-radius: 10px;
+}
+
+.tab-btn {
+    padding: 10px 16px;
+    border: none;
+    background: transparent;
     color: #F8F4FF;
+    font-weight: 700;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
 }
 
-.tabs a:hover {
-    background: #646474;
+.tab-btn.is-active {
+    background: #00a550;
+    color: #23242a;
 }
 
-.skill-block {
-    padding: 12px 0;
-    border-bottom: 1px solid #33343a;
+.tab-panel {
+    display: none;
 }
 
-.skill-block:last-child {
-    border-bottom: none;
+.tab-panel.is-active {
+    display: block;
 }
 
-.skill-header {
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.info-tile {
+    padding: 12px;
+    border: 1px solid #33343a;
+    border-radius: 10px;
+    background: #23242a;
+}
+
+.tile-label {
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #cfd3ff;
+    margin-bottom: 6px;
+}
+
+.tile-value {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 14px;
+}
+
+.skill-group {
+    border: 1px solid #33343a;
+    border-radius: 12px;
+    background: #23242a;
+    padding: 12px;
+}
+
+.skill-group__title {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
-    gap: 12px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.skill-chip {
+    background: #28262d;
+    color: #00a550;
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-weight: 800;
+    font-size: 13px;
+    letter-spacing: 0.3px;
+    border: 1px solid #33343a;
+}
+
+.skill-card {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #33343a;
+    background: #2c2d33;
+}
+
+.skill-card + .skill-card {
+    margin-top: 10px;
+}
+
+.skill-card__top {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
     margin-bottom: 6px;
 }
 
 .skill-name {
     font-weight: 800;
     color: #F8F4FF;
+    margin-bottom: 2px;
 }
 
 .skill-meta {
     color: #F8F4FF;
     font-size: 13px;
+    opacity: 0.8;
 }
 
-.skill-levels {
-    background: #2c2d33;
-    padding: 10px;
-    border-radius: 8px;
+.ratings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.rating-card {
     border: 1px solid #33343a;
-    white-space: pre-wrap;
+    border-radius: 12px;
+    background: linear-gradient(145deg, #28262d, #23242a);
+    padding: 12px;
+}
+
+.rating-label {
+    font-size: 13px;
+    opacity: 0.8;
+    margin-bottom: 4px;
+}
+
+.rating-value {
+    font-size: 26px;
+    font-weight: 900;
+    color: #23242a;
+}
+
+.difficulty-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px dashed #33343a;
+    background: #23242a;
+    margin-bottom: 18px;
+}
+
+.pros-cons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 14px;
+    margin-bottom: 16px;
+}
+
+.pros-cons__col {
+    border: 1px solid #33343a;
+    border-radius: 12px;
+    background: #23242a;
+    padding: 12px;
+}
+
+.review-block {
+    border-top: 1px solid #33343a;
+    padding-top: 12px;
+}
+
+.pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.pill-muted {
+    background: #33343a;
+    color: #F8F4FF;
+}
+
+.pill-soft {
+    background: rgba(244, 166, 42, 0.15);
+    color: #00a550;
+    border: 1px solid #33343a;
+}
+
+.muted {
+    color: #cfd3ff;
+    opacity: 0.75;
 }
 
 .rich-text {
