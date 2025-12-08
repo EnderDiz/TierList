@@ -14,149 +14,153 @@
     </div>
     <div class="char-header-right">
         <h1>{{ character.name }}</h1>
-        <div class="char-meta-row">
-            <p class="char-facts">
-                <span>{{ character.class_name or '—' }}</span> ·
-                <span>{{ character.faction or '—' }}</span>
-            </p>
-            {% if character.difficulty %}
-                <span class="pill pill-muted">{{ character.difficulty }}</span>
-            {% endif %}
-        </div>
-        {% if character.short_summary %}
-            <p class="char-summary rich-text">{{ character.short_summary }}</p>
-        {% endif %}
     </div>
 </div>
 
 <div class="tab-switch">
-    <button class="tab-btn is-active" data-tab-target="profile">Профиль</button>
+    <button class="tab-btn is-active" data-tab-target="profile">Информация</button>
     <button class="tab-btn" data-tab-target="overview">Обзор</button>
 </div>
 
 <section class="tab-panel is-active" id="profile">
     <div class="card">
-        <h2>Профиль</h2>
-        <div class="info-grid">
-            <div class="info-tile">
-                <div class="tile-label">Фракция</div>
-                <div class="tile-value">{{ character.faction or '—' }}</div>
-            </div>
-            <div class="info-tile">
-                <div class="tile-label">Класс</div>
-                <div class="tile-value">{{ character.class_name or '—' }}</div>
-            </div>
-            <div class="info-tile">
-                <div class="tile-label">Сложность</div>
-                <div class="tile-value">{{ character.difficulty or '—' }}</div>
-            </div>
-        </div>
-
-        <div class="skills-grid">
-            {% for group in skill_groups %}
-                {% if group.skills %}
-                    <div class="skill-group">
-                        <div class="skill-group__title">
-                            <span class="skill-chip">{{ group.label }}</span>
-                        </div>
-                        {% for s in group.skills %}
-                            <div class="skill-card">
-                                <div class="skill-card__top">
-                                    <div>
-                                        <div class="skill-name">{{ s.name }}</div>
-                                        <div class="skill-meta">КД: {{ s.cooldown or "-" }}</div>
-                                    </div>
-                                    {% if s.valid_hits %}
-                                        <span class="pill pill-soft">Попаданий: {{ s.valid_hits }}</span>
-                                    {% endif %}
-                                </div>
-                                <div class="rich-text">{{ s.description }}</div>
-                            </div>
-                        {% endfor %}
+        <div class="profile-sections">
+            <div class="profile-section">
+                <h2 class="section-title">Информация</h2>
+                <div class="info-grid info-grid--centered">
+                    <div class="info-tile info-tile--centered">
+                        <div class="tile-label">Фракция</div>
+                        <div class="tile-value">{{ character.faction or '—' }}</div>
                     </div>
-                {% endif %}
-            {% endfor %}
-
-            {% for group in additional_skill_groups %}
-                <div class="skill-group">
-                    <div class="skill-group__title">
-                        <span class="skill-chip">{{ group.label }}</span>
+                    <div class="info-tile info-tile--centered">
+                        <div class="tile-label">Сложность</div>
+                        <div class="tile-value">{{ character.difficulty or '—' }}</div>
                     </div>
-                    {% for s in group.skills %}
-                        <div class="skill-card">
-                            <div class="skill-card__top">
-                                <div>
-                                    <div class="skill-name">{{ s.name }}</div>
-                                    <div class="skill-meta">КД: {{ s.cooldown or "-" }}</div>
-                                </div>
-                                {% if s.valid_hits %}
-                                    <span class="pill pill-soft">Попаданий: {{ s.valid_hits }}</span>
-                                {% endif %}
-                            </div>
-                            <div class="rich-text">{{ s.description }}</div>
-                        </div>
-                    {% endfor %}
+                        <div class="info-tile info-tile--centered">
+                        <div class="tile-label">Общий рейтинг</div>
+                        <div class="tile-value">{{ character.overall_tier or '—' }}</div>
+                    </div>
                 </div>
-            {% endfor %}
+            </div>
 
-            {% if not skills_by_type %}
-                <p class="muted">Навыки пока не добавлены.</p>
-            {% endif %}
+            <div class="profile-section profile-section--skills">
+                <h2 class="section-title">Умения</h2>
+                <div class="compact-skills">
+                    {% set ns = namespace(count=0) %}
+
+                    {% for group in skill_groups %}
+                        {% if group.skills %}
+                            {% for s in group.skills %}
+                                {% if ns.count < 3 %}
+                                    <div class="compact-skill">
+                                        <div class="compact-skill__header">
+                                            <div class="compact-skill__title">
+                                                <span class="skill-chip">{{ group.label }}</span>
+                                                <span class="skill-name-inline">{{ s.name }}</span>
+                                            </div>
+                                            <span class="skill-cooldown">{{ s.cooldown or '—' }}</span>
+                                        </div>
+                                        <div class="compact-skill__body">{{ s.description }}</div>
+                                    </div>
+                                    {% set ns.count = ns.count + 1 %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% for group in additional_skill_groups %}
+                        {% if ns.count < 3 %}
+                            {% for s in group.skills %}
+                                {% if ns.count < 3 %}
+                                    <div class="compact-skill">
+                                        <div class="compact-skill__header">
+                                            <div class="compact-skill__title">
+                                                <span class="skill-chip">{{ group.label }}</span>
+                                                <span class="skill-name-inline">{{ s.name }}</span>
+                                            </div>
+                                            <span class="skill-cooldown">{{ s.cooldown or '—' }}</span>
+                                        </div>
+                                        <div class="compact-skill__body">{{ s.description }}</div>
+                                    </div>
+                                    {% set ns.count = ns.count + 1 %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if ns.count == 0 %}
+                        <p class="muted">Навыки пока не добавлены.</p>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
 <section class="tab-panel" id="overview">
-    <div class="card">
-        <h2>Обзор и оценки</h2>
-        <div class="ratings-grid">
-            <div class="rating-card">
-                <div class="rating-label">Оружие</div>
-                <div class="rating-value">{{ character.tier_weapon or '—' }}</div>
-            </div>
-            <div class="rating-card">
-                <div class="rating-label">Навык</div>
-                <div class="rating-value">{{ character.tier_skill or '—' }}</div>
-            </div>
-            <div class="rating-card">
-                <div class="rating-label">Пассивка</div>
-                <div class="rating-value">{{ character.tier_passive or '—' }}</div>
-            </div>
-            <div class="rating-card">
-                <div class="rating-label">Ультимейт</div>
-                <div class="rating-value">{{ character.tier_ultimate or '—' }}</div>
-            </div>
-        </div>
+    <div class="card overview-sections">
+        <div class="overview-section">
+            <h2 class="section-title">Рейтинг</h2>
+            <div class="rating-block">
+                <div class="rating-row rating-row--tiers">
+                    <div class="rating-item">
+                        <span class="rating-pill tier-pill tier-{{ character.tier_weapon|lower if character.tier_weapon else 'none' }}">{{ character.tier_weapon or '—' }}</span>
+                        <div class="rating-caption">Оружие</div>
+                    </div>
+                    <div class="rating-item">
+                        <span class="rating-pill tier-pill tier-{{ character.tier_skill|lower if character.tier_skill else 'none' }}">{{ character.tier_skill or '—' }}</span>
+                        <div class="rating-caption">Навык</div>
+                    </div>
+                    <div class="rating-item">
+                        <span class="rating-pill tier-pill tier-{{ character.tier_passive|lower if character.tier_passive else 'none' }}">{{ character.tier_passive or '—' }}</span>
+                        <div class="rating-caption">Пассивка</div>
+                    </div>
+                    <div class="rating-item">
+                        <span class="rating-pill tier-pill tier-{{ character.tier_ultimate|lower if character.tier_ultimate else 'none' }}">{{ character.tier_ultimate or '—' }}</span>
+                        <div class="rating-caption">Ультимейт</div>
+                    </div>
+                </div>
 
-        <div class="difficulty-banner">
-            <div>
-                <div class="tile-label">Сложность освоения</div>
-                <div class="tile-value">{{ character.difficulty or '—' }}</div>
-            </div>
-            {% if character.balance_status %}
-                <span class="pill pill-soft">Баланс: {{ character.balance_status }}</span>
-            {% endif %}
-        </div>
+                <div class="rating-row rating-row--summary">
+                    <div class="rating-item">
+                        <span class="rating-pill tier-pill tier-{{ character.overall_tier|lower if character.overall_tier else 'none' }}">{{ character.overall_tier or '—' }}</span>
+                        <div class="rating-caption">Общая оценка</div>
+                    </div>
+                    <div class="rating-item">
+                        <span class="rating-chip rating-chip--difficulty">{{ character.difficulty or '—' }}</span>
+                        <div class="rating-caption">Сложность освоения</div>
+                    </div>
+                </div>
 
-        <div class="pros-cons">
-            <div class="pros-cons__col">
-                <h3>Плюсы</h3>
-                {% if character.short_summary %}
-                    <div class="rich-text">{{ character.short_summary }}</div>
-                {% else %}
-                    <p class="muted">Плюсы пока не добавлены.</p>
-                {% endif %}
-            </div>
-            <div class="pros-cons__col">
-                <h3>Минусы</h3>
-                {% if character.review %}
-                    <p class="muted">Минусы добавьте как отдельный блок в обзоре.</p>
-                {% else %}
-                    <p class="muted">Минусы пока не добавлены.</p>
+                {% if character.balance_status %}
+                    <div class="rating-footer">
+                        <span class="pill pill-soft">Баланс: {{ character.balance_status }}</span>
+                    </div>
                 {% endif %}
             </div>
         </div>
 
+        <div class="overview-section">
+            <h2 class="section-title">За и Против</h2>
+            <div class="pros-cons">
+                <div class="pros-cons__col pros-cons__col--pros">
+                    <h3 class="pros-cons__title">Плюсы</h3>
+                    {% if character.short_summary %}
+                        <div class="rich-text rich-text--pros">{{ character.short_summary }}</div>
+                    {% else %}
+                        <p class="muted">Плюсы пока не добавлены.</p>
+                    {% endif %}
+                </div>
+                <div class="pros-cons__col pros-cons__col--cons">
+                    <h3 class="pros-cons__title">Минусы</h3>
+                    {% if character.review %}
+                        <p class="muted">Минусы добавьте как отдельный блок в обзоре.</p>
+                    {% else %}
+                        <p class="muted">Минусы пока не добавлены.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
         <div class="review-block">
             <h3>Ревью</h3>
             {% if character.review %}
