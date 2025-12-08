@@ -5,6 +5,7 @@ from auth import get_current_user, login_user, logout_user, admin_required
 from config import Config
 from flask import Flask, render_template, request, redirect, url_for, flash
 from models import db, User, Character, Skill
+from werkzeug.middleware.proxy_fix import ProxyFix
 from werkzeug.security import check_password_hash
 
 
@@ -12,11 +13,32 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
+    app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
+
     db.init_app(app)
 
     @app.context_processor
     def inject_user():
         return {"current_user": get_current_user()}
+
+    @app.before_request
+    def enforce_https():
+        if not app.config.get("FORCE_HTTPS"):
+            return None
+
+        is_secure = request.is_secure or request.headers.get("X-Forwarded-Proto", "").split(",")[0].strip() == "https"
+        if not is_secure:
+            https_url = request.url.replace("http://", "https://", 1)
+            return redirect(https_url, code=301)
+        return None
+
+    @app.after_request
+    def add_security_headers(response):
+        if app.config.get("FORCE_HTTPS"):
+            response.headers.setdefault(
+                "Strict-Transport-Security", "max-age=31536000; includeSubDomains"
+            )
+        return response
 
     def normalize_image_name(name: str | None):
         """Store only the base file name (no extension) for flexible formats."""
@@ -389,5 +411,9 @@ if __name__ == "__main__":
     app = create_app()
     with app.app_context():
         db.create_all()
+    ssl_cert = os.getenv("SSL_CERT_FILE")
+    ssl_key = os.getenv("SSL_KEY_FILE")
+    ssl_context = (ssl_cert, ssl_key) if ssl_cert and ssl_key else None
+
     # Делаем доступным по локальной сети
-    app.run(host="0.0.0.0", port=8000, debug=True)
+    app.run(host="0.0.0.0", port=8000, debug=False, ssl_context=ssl_context)
