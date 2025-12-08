@@ -1,18 +1,26 @@
 """Общие вспомогательные функции для скриптов работы с БД."""
 
+import sys
 from contextlib import contextmanager
 from pathlib import Path
-import sys
 from typing import Iterable
 
-# Добавляем корень проекта в sys.path, чтобы можно было импортировать app/models
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
+from sqlalchemy import text
+
+def _ensure_project_root():
+    """Make sure the repository root is importable when run as a script."""
+
+    project_root = Path(__file__).resolve().parents[1]
+    project_root_str = str(project_root)
+    if project_root_str not in sys.path:
+        sys.path.insert(0, project_root_str)
+
+
+if __package__ is None or __package__ == "":
+    _ensure_project_root()
 
 from app import create_app
 from models import db
-from sqlalchemy import text
 
 
 @contextmanager
@@ -35,4 +43,3 @@ def execute_sql(statements: Iterable[str]):
             except Exception as exc:  # noqa: BLE001
                 print("SKIP:", stmt, "=>", exc)
         db.session.commit()
-        print("Миграция завершена")

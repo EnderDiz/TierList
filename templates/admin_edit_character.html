@@ -168,21 +168,12 @@
                     </div>
 
                     <div class="rating-row rating-row--summary">
-                        {% set overall = character.overall_tier if character else '' %}
-                        <label class="rating-item">Общая оценка
-                            <select name="overall_tier" class="pill-input">
-                                <option value="">—</option>
-                                {% for v in tier_options %}
-                                    <option value="{{ v }}" {% if overall==v %}selected{% endif %}>{{ v }}</option>
-                                {% endfor %}
-                            </select>
-                        </label>
                         <label class="rating-item">Сложность освоения
                             <select name="difficulty" class="pill-input">
                                 <option value="">—</option>
                                 <option value="Лёгкий" {% if diff=='Лёгкий' %}selected{% endif %}>Лёгкий</option>
-                                <option value="Сложный" {% if diff=='Сложный' %}selected{% endif %}>Сложный</option>
                                 <option value="Средний" {% if diff=='Средний' %}selected{% endif %}>Средний</option>
+                                <option value="Сложный" {% if diff=='Сложный' %}selected{% endif %}>Сложный</option>
                             </select>
                         </label>
                     </div>

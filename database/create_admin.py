@@ -1,8 +1,23 @@
 """Создание администратора через консоль."""
 
+import sys
+from pathlib import Path
 from getpass import getpass
 
 from werkzeug.security import generate_password_hash
+
+
+def _ensure_project_root():
+    """Make sure the repository root is importable when run as a script."""
+
+    project_root = Path(__file__).resolve().parents[1]
+    project_root_str = str(project_root)
+    if project_root_str not in sys.path:
+        sys.path.insert(0, project_root_str)
+
+
+if __package__ is None or __package__ == "":
+    _ensure_project_root()
 
 from database.utils import app_context
 from models import User, db
@@ -27,7 +42,3 @@ def main():
         db.session.add(user)
         db.session.commit()
         print("Администратор создан.")
-
-
-if __name__ == "__main__":
-    main()

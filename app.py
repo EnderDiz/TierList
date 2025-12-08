@@ -250,7 +250,7 @@ def create_app():
         normalized_difficulties = {canonical_difficulty(value) for value in raw_difficulty_values}
         normalized_difficulties.discard(None)
 
-        preferred_order = ["Лёгкий", "Сложный", "Средний"]
+        preferred_order = ["Лёгкий", "Средний", "Сложный"]
         ordered_known = [name for name in preferred_order if name in normalized_difficulties]
         remaining = sorted(normalized_difficulties - set(preferred_order))
         available_difficulties = ordered_known + remaining
