@@ -1,9 +1,18 @@
 # app.py
 import os
+from pathlib import Path
 
 from auth import get_current_user, login_user, logout_user, admin_required
 from config import Config
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import (
+    Flask,
+    flash,
+    redirect,
+    render_template,
+    request,
+    send_from_directory,
+    url_for,
+)
 from models import db, User, Character, Skill
 from werkzeug.middleware.proxy_fix import ProxyFix
 from werkzeug.security import check_password_hash
@@ -12,6 +21,10 @@ from werkzeug.security import check_password_hash
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+
+    # Создаём служебные директории на старте, чтобы пути точно существовали
+    Path(app.config["DATA_DIR"]).mkdir(parents=True, exist_ok=True)
+    Path(app.config["MEDIA_IMAGES_DIR"]).mkdir(parents=True, exist_ok=True)
 
     BALANCE_STATUSES: dict[str, str] = {
         "nerf": "Ослабление",
@@ -46,8 +59,14 @@ def create_app():
             )
         return response
 
+    @app.route("/media/images/<path:filename>")
+    def media_image(filename):
+        """Отдаём пользовательские изображения из отдельной папки."""
+
+        return send_from_directory(app.config["MEDIA_IMAGES_DIR"], filename)
+
     def normalize_image_name(name: str | None):
-        """Store only the base file name (no extension) for flexible formats."""
+        """Оставляем только базовое имя файла, чтобы можно было менять расширение."""
         if not name:
             return None
         name = name.strip()
@@ -58,6 +77,7 @@ def create_app():
         return base or None
 
     def parse_skills_form(form):
+        """Читает данные из формы и собирает список словарей по навыкам."""
         names = form.getlist("skill_name")
         types = form.getlist("skill_type")
         descriptions = form.getlist("skill_description")
@@ -78,21 +98,23 @@ def create_app():
         return skills
 
     def image_sources(image_name: str | None):
+        """Возвращает доступные версии изображения из папки media/images."""
+
         base = normalize_image_name(image_name)
         if not base:
             return []
 
-        static_dir = app.static_folder or os.path.join(app.root_path, "static")
+        images_dir = Path(app.config["MEDIA_IMAGES_DIR"])
         sources = []
         for ext, mime in (
-                (".webp", "image/webp"),
-                (".png", "image/png"),
-                (".jpg", "image/jpeg"),
-                (".jpeg", "image/jpeg"),
+            (".webp", "image/webp"),
+            (".png", "image/png"),
+            (".jpg", "image/jpeg"),
+            (".jpeg", "image/jpeg"),
         ):
-            candidate = os.path.join(static_dir, "images", base + ext)
-            if os.path.exists(candidate):
-                sources.append({"path": "images/" + base + ext, "mime": mime})
+            candidate = images_dir / f"{base}{ext}"
+            if candidate.exists():
+                sources.append({"path": candidate.name, "mime": mime})
         return sources
 
     app.jinja_env.globals["image_sources"] = image_sources
