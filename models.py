@@ -30,6 +30,7 @@ class Character(db.Model):
     difficulty = db.Column(db.String(32))  # НОВОЕ: сложность освоения
 
     short_summary = db.Column(db.Text)
+    cons = db.Column(db.Text)
     review = db.Column(db.Text)
 
     image_name = db.Column(db.String(255))

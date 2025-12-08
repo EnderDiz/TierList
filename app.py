@@ -7,6 +7,7 @@ from config import Config
 from flask import (
     Flask,
     flash,
+    jsonify,
     redirect,
     render_template,
     request,
@@ -372,6 +373,7 @@ def create_app():
             difficulty = request.form.get("difficulty")  # НОВОЕ
 
             short_summary = request.form.get("short_summary")
+            cons = request.form.get("cons")
             review = request.form.get("review")
 
             image_name_raw = request.form.get("image_name")
@@ -391,6 +393,7 @@ def create_app():
                 tier_ultimate=tier_ultimate,
                 difficulty=difficulty,  # НОВОЕ
                 short_summary=short_summary,
+                cons=cons,
                 review=review,
                 image_name=image_name,
             )
@@ -413,6 +416,8 @@ def create_app():
     def admin_edit_character(char_id):
         ch = Character.query.get_or_404(char_id)
 
+        wants_json = request.headers.get("X-Requested-With") == "XMLHttpRequest"
+
         if request.method == "POST":
             ch.name = request.form.get("name")
             ch.slug = request.form.get("slug")
@@ -431,12 +436,14 @@ def create_app():
             ch.difficulty = request.form.get("difficulty")  # НОВОЕ
 
             ch.short_summary = request.form.get("short_summary")
+            ch.cons = request.form.get("cons")
             ch.review = request.form.get("review")
 
             img_raw = request.form.get("image_name")
             ch.image_name = normalize_image_name(img_raw)
 
             skills_payload = parse_skills_form(request.form)
+            payload_skills = []
             existing_by_id = {str(s.id): s for s in ch.skills if s.id}
             kept_ids = set()
 
@@ -453,12 +460,21 @@ def create_app():
                 skill.type = payload.get("type")
                 skill.description = payload.get("description")
                 skill.cooldown = payload.get("cooldown")
+                payload_skills.append(skill)
 
             for skill in list(ch.skills):
                 if skill.id and str(skill.id) not in kept_ids and str(skill.id) in existing_by_id:
                     db.session.delete(skill)
 
             db.session.commit()
+            if wants_json:
+                return jsonify(
+                    {
+                        "status": "ok",
+                        "skill_ids": [s.id for s in payload_skills],
+                    }
+                )
+
             flash("Персонаж сохранён.", "success")
             return redirect(url_for("admin_dashboard"))
 

@@ -149,8 +149,8 @@
                 </div>
                 <div class="pros-cons__col pros-cons__col--cons">
                     <h3 class="pros-cons__title">Минусы</h3>
-                    {% if character.review %}
-                        <p class="muted">Минусы добавьте как отдельный блок в обзоре.</p>
+                    {% if character.cons %}
+                        <div class="rich-text rich-text--cons">{{ character.cons }}</div>
                     {% else %}
                         <p class="muted">Минусы пока не добавлены.</p>
                     {% endif %}
