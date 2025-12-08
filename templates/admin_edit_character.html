@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import "_macros.html" as macros %}
 
 {% if character %}
     {% set page_title = "Редактирование персонажа" %}
@@ -9,175 +10,323 @@
 {% block title %}{{ page_title }}{% endblock %}
 
 {% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='character.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='admin.css') }}">
 {% endblock %}
 
 {% block content %}
-<div class="card">
-    <h1>{{ page_title }}</h1>
-    <form method="post">
-        <div class="form-grid">
-            <label>Имя
-                <input type="text" name="name" value="{{ character.name if character else '' }}" required>
-            </label>
-            <label>Slug (url)
-                <input type="text" name="slug" value="{{ character.slug if character else '' }}" required>
-            </label>
+<form method="post" action="{{ url_for('admin_edit_character', char_id=character.id) if character else url_for('admin_new_character') }}" class="character-editor" data-autosave="{{ 'true' if character else 'false' }}">
+    <div class="card character-header">
+        <div class="char-header-left">
+            {% if character and character.image_name %}
+                {{ macros.character_image(character.image_name, character.name, size='large', placeholder=character.name[0]) }}
+            {% else %}
+                {{ macros.character_image('placeholder', character.name if character else '—', size='large', placeholder=(character.name[0] if character else '—')) }}
+            {% endif %}
+        </div>
+        <div class="char-header-right">
+            <div class="char-header-fields">
+                <label class="stacked">Имя персонажа
+                    <input type="text" name="name" value="{{ character.name if character else '' }}" required>
+                </label>
+                <label class="stacked">Slug (url)
+                    <input type="text" name="slug" value="{{ character.slug if character else '' }}" required>
+                </label>
+                <label class="stacked">Имя файла изображения (без расширения)
+                    <input type="text" name="image_name" value="{{ character.image_name if character and character.image_name else '' }}" placeholder="Например, striker">
+                </label>
+            </div>
+        </div>
+    </div>
 
-            <label>Класс
-                {% set cls = character.class_name if character else '' %}
-                <select name="class_name">
-                    <option value="">Не указан</option>
-                    <option value="Дуэлянт" {% if cls=='Дуэлянт' %}selected{% endif %}>Дуэлянт</option>
-                    <option value="Страж" {% if cls=='Страж' %}selected{% endif %}>Страж</option>
-                    <option value="Поддержка" {% if cls=='Поддержка' %}selected{% endif %}>Поддержка</option>
-                    <option value="Штурмовик" {% if cls=='Штурмовик' %}selected{% endif %}>Штурмовик</option>
-                    <option value="Манипулятор" {% if cls=='Манипулятор' %}selected{% endif %}>Манипулятор</option>
-                </select>
-            </label>
+    <div class="tab-switch">
+        <button class="tab-btn is-active" type="button" data-tab-target="profile">Информация</button>
+        <button class="tab-btn" type="button" data-tab-target="overview">Обзор</button>
+    </div>
 
-            <label>Фракция
-                {% set f = character.faction if character else '' %}
-                <select name="faction">
-                    <option value="">Не указана</option>
-                    <option value="Ножницы" {% if f=='Ножницы' %}selected{% endif %}>Ножницы</option>
-                    <option value="Урбино" {% if f=='Урбино' %}selected{% endif %}>Урбино</option>
-                    <option value="СТУ" {% if f=='СТУ' %}selected{% endif %}>СТУ</option>
-                </select>
-            </label>
+    <section class="tab-panel is-active" id="profile">
+        <div class="card">
+            <div class="profile-sections">
+                <div class="profile-section">
+                    <h2 class="section-title">Информация</h2>
+                    <div class="info-grid info-grid--centered">
+                        {% set cls = character.class_name if character else '' %}
+                        <div class="info-tile info-tile--centered">
+                            <div class="tile-label">Фракция</div>
+                            {% set f = character.faction if character else '' %}
+                            <select name="faction" class="tile-control">
+                                <option value="">Не указана</option>
+                                <option value="Ножницы" {% if f=='Ножницы' %}selected{% endif %}>Ножницы</option>
+                                <option value="Урбино" {% if f=='Урбино' %}selected{% endif %}>Урбино</option>
+                                <option value="СТУ" {% if f=='СТУ' %}selected{% endif %}>СТУ</option>
+                            </select>
+                        </div>
+                        <div class="info-tile info-tile--centered">
+                            <div class="tile-label">Класс</div>
+                            <select name="class_name" class="tile-control">
+                                <option value="">Не указан</option>
+                                <option value="Дуэлянт" {% if cls=='Дуэлянт' %}selected{% endif %}>Дуэлянт</option>
+                                <option value="Страж" {% if cls=='Страж' %}selected{% endif %}>Страж</option>
+                                <option value="Поддержка" {% if cls=='Поддержка' %}selected{% endif %}>Поддержка</option>
+                                <option value="Штурмовик" {% if cls=='Штурмовик' %}selected{% endif %}>Штурмовик</option>
+                                <option value="Манипулятор" {% if cls=='Манипулятор' %}selected{% endif %}>Манипулятор</option>
+                            </select>
+                        </div>
+                        <div class="info-tile info-tile--centered">
+                            <div class="tile-label">Баланс</div>
+                            {% set status = character.balance_status if character else '' %}
+                            <select name="balance_status" class="tile-control">
+                                <option value="">Не отмечено</option>
+                                <option value="buff" {% if status=='buff' %}selected{% endif %}>Бафф</option>
+                                <option value="nerf" {% if status=='nerf' %}selected{% endif %}>Нерф</option>
+                                <option value="rework" {% if status=='rework' %}selected{% endif %}>Изменён</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
 
-            <label>Обновление баланса
-                {% set status = character.balance_status if character else '' %}
-                <select name="balance_status">
-                    <option value="">Не отмечено</option>
-                    <option value="buff" {% if status=='buff' %}selected{% endif %}>Бафф</option>
-                    <option value="nerf" {% if status=='nerf' %}selected{% endif %}>Нерф</option>
-                    <option value="rework" {% if status=='rework' %}selected{% endif %}>Изменён</option>
-                </select>
-            </label>
+                <div class="profile-section profile-section--skills">
+                    <div class="skills-form">
+                        <div class="skills-form__header">
+                            <h2 class="section-title">Умения</h2>
+                            <button type="button" class="btn btn-ghost" id="add-skill-btn">Добавить навык</button>
+                        </div>
+                        <div id="skills-list">
+                            {% set skills = character.skills if character and character.skills else [None] %}
+                            {% for skill in skills %}
+                                <div class="skill-form-row compact-skill">
+                                    <input type="hidden" name="skill_id" value="{{ skill.id if skill else '' }}">
+                                    <div class="skill-form-grid">
+                                        <label class="stacked">Название навыка
+                                            <input type="text" name="skill_name" value="{{ skill.name if skill else '' }}" placeholder="Напр. Striker Kick">
+                                        </label>
+                                        <label class="stacked">Тип
+                                            <input type="text" name="skill_type" value="{{ skill.type if skill else '' }}" placeholder="Ультимейт / Пассивка / Навык">
+                                        </label>
+                                        <label class="stacked">Кулдаун
+                                            <input type="text" name="skill_cooldown" value="{{ skill.cooldown if skill else '' }}" placeholder="Напр. 12с">
+                                        </label>
+                                    </div>
+                                    <label class="stacked">Описание
+                                        <textarea name="skill_description" rows="3" placeholder="Кратко опишите механику">{{ skill.description if skill else '' }}</textarea>
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <section class="tab-panel" id="overview">
+        <div class="card overview-sections">
+            {% set raw_diff = character.difficulty if character else '' %}
+            {% set diff = 'Лёгкий' if raw_diff == 'Для новичков' else raw_diff %}
             {% set tw = character.tier_weapon if character else '' %}
             {% set ts = character.tier_skill if character else '' %}
             {% set tp = character.tier_passive if character else '' %}
             {% set tu = character.tier_ultimate if character else '' %}
             {% set tier_options = ['D','C','B','A','S','SS','SSS'] %}
 
-            <label>Тир (Оружие)
-                <select name="tier_weapon">
-                    <option value="">-</option>
-                    {% for v in tier_options %}
-                    <option value="{{ v }}" {% if tw==v %}selected{% endif %}>{{ v }}</option>
-                    {% endfor %}
-                </select>
-            </label>
-
-            <label>Тир (Навык)
-                <select name="tier_skill">
-                    <option value="">-</option>
-                    {% for v in tier_options %}
-                    <option value="{{ v }}" {% if ts==v %}selected{% endif %}>{{ v }}</option>
-                    {% endfor %}
-                </select>
-            </label>
-
-            <label>Тир (Пассивная способность)
-                <select name="tier_passive">
-                    <option value="">-</option>
-                    {% for v in tier_options %}
-                    <option value="{{ v }}" {% if tp==v %}selected{% endif %}>{{ v }}</option>
-                    {% endfor %}
-                </select>
-            </label>
-
-            <label>Тир (Ультимейт)
-                <select name="tier_ultimate">
-                    <option value="">-</option>
-                    {% for v in tier_options %}
-                    <option value="{{ v }}" {% if tu==v %}selected{% endif %}>{{ v }}</option>
-                    {% endfor %}
-                </select>
-            </label>
-            <label>Имя файла изображения (без расширения)
-                <input type="text" name="image_name"
-                       value="{{ character.image_name if character and character.image_name else '' }}">
-            </label>
-            <label>Сложность освоения
-                {% set raw_diff = character.difficulty if character else '' %}
-                {% set diff = 'Лёгкий' if raw_diff == 'Для новичков' else raw_diff %}
-                <select name="difficulty">
-                    <option value="">Не указана</option>
-                    <option value="Лёгкий" {% if diff=='Лёгкий' %}selected{% endif %}>Лёгкий</option>
-                    <option value="Сложный" {% if diff=='Сложный' %}selected{% endif %}>Сложный</option>
-                    <option value="Средний" {% if diff=='Средний' %}selected{% endif %}>Средний</option>
-                </select>
-            </label>
-        </div>
-        <label>Краткое резюме
-            <textarea name="short_summary" rows="4">{{ character.short_summary if character else '' }}</textarea>
-        </label>
-
-        <label>Обзор
-            <textarea name="review" rows="8">{{ character.review if character else '' }}</textarea>
-        </label>
-
-        <div class="skills-form">
-            <div class="skills-form__header">
-                <h2>Навыки</h2>
-                <button type="button" class="btn btn-ghost" id="add-skill-btn">Добавить навык</button>
-            </div>
-            <div id="skills-list">
-                {% set skills = character.skills if character and character.skills else [None] %}
-                {% for skill in skills %}
-                    <div class="skill-form-row">
-                        <input type="hidden" name="skill_id" value="{{ skill.id if skill else '' }}">
-                        <label>Название навыка
-                            <input type="text" name="skill_name" value="{{ skill.name if skill else '' }}" placeholder="Напр. Striker Kick">
+            <div class="overview-section">
+                <h2 class="section-title">Рейтинг</h2>
+                <div class="rating-block">
+                    <div class="rating-row rating-row--tiers">
+                        <label class="rating-item">Оружие
+                            <select name="tier_weapon" class="pill-input">
+                                <option value="">—</option>
+                                {% for v in tier_options %}
+                                    <option value="{{ v }}" {% if tw==v %}selected{% endif %}>{{ v }}</option>
+                                {% endfor %}
+                            </select>
                         </label>
-                        <label>Тип
-                            <input type="text" name="skill_type" value="{{ skill.type if skill else '' }}" placeholder="Ультимейт / Пассивка / Навык">
+                        <label class="rating-item">Навык
+                            <select name="tier_skill" class="pill-input">
+                                <option value="">—</option>
+                                {% for v in tier_options %}
+                                    <option value="{{ v }}" {% if ts==v %}selected{% endif %}>{{ v }}</option>
+                                {% endfor %}
+                            </select>
                         </label>
-                        <label>Описание
-                            <textarea name="skill_description" rows="3" placeholder="Кратко опишите механику">{{ skill.description if skill else '' }}</textarea>
+                        <label class="rating-item">Пассивка
+                            <select name="tier_passive" class="pill-input">
+                                <option value="">—</option>
+                                {% for v in tier_options %}
+                                    <option value="{{ v }}" {% if tp==v %}selected{% endif %}>{{ v }}</option>
+                                {% endfor %}
+                            </select>
                         </label>
-                        <label>Кулдаун
-                            <input type="text" name="skill_cooldown" value="{{ skill.cooldown if skill else '' }}" placeholder="Напр. 12с">
+                        <label class="rating-item">Ультимейт
+                            <select name="tier_ultimate" class="pill-input">
+                                <option value="">—</option>
+                                {% for v in tier_options %}
+                                    <option value="{{ v }}" {% if tu==v %}selected{% endif %}>{{ v }}</option>
+                                {% endfor %}
+                            </select>
                         </label>
                     </div>
-                {% endfor %}
+
+                    <div class="rating-row rating-row--summary">
+                        {% set overall = character.overall_tier if character else '' %}
+                        <label class="rating-item">Общая оценка
+                            <select name="overall_tier" class="pill-input">
+                                <option value="">—</option>
+                                {% for v in tier_options %}
+                                    <option value="{{ v }}" {% if overall==v %}selected{% endif %}>{{ v }}</option>
+                                {% endfor %}
+                            </select>
+                        </label>
+                        <label class="rating-item">Сложность освоения
+                            <select name="difficulty" class="pill-input">
+                                <option value="">—</option>
+                                <option value="Лёгкий" {% if diff=='Лёгкий' %}selected{% endif %}>Лёгкий</option>
+                                <option value="Сложный" {% if diff=='Сложный' %}selected{% endif %}>Сложный</option>
+                                <option value="Средний" {% if diff=='Средний' %}selected{% endif %}>Средний</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    {% if character and character.balance_status %}
+                        <div class="rating-footer">
+                            <span class="pill pill-soft">Баланс: {{ character.balance_status }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="overview-section">
+                <div class="pros-cons">
+                    <div class="pros-cons__col pros-cons__col--pros">
+                        <h3 class="pros-cons__title">Плюсы</h3>
+                        <textarea name="short_summary" rows="4" class="rich-text-input" placeholder="Опишите сильные стороны">{{ character.short_summary if character else '' }}</textarea>
+                    </div>
+                    <div class="pros-cons__col pros-cons__col--cons">
+                        <h3 class="pros-cons__title">Минусы</h3>
+                        <textarea name="cons" rows="4" class="rich-text-input" placeholder="Опишите слабые стороны">{{ character.cons if character else '' }}</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="review-block">
+                <h3>Ревью</h3>
+                <textarea name="review" rows="8" class="rich-text-input" placeholder="Добавьте развёрнутый обзор">{{ character.review if character else '' }}</textarea>
             </div>
         </div>
+    </section>
 
-        <button type="submit">Сохранить</button>
-    </form>
+    <div class="actions-row">
+        <div class="autosave-status" role="status">{{ 'Изменения сохраняются автоматически' if character else 'Нажмите «Сохранить», чтобы создать персонажа' }}</div>
+        <button type="submit" class="btn primary">Сохранить</button>
+    </div>
 
     <template id="skill-template">
-        <div class="skill-form-row">
+        <div class="skill-form-row compact-skill">
             <input type="hidden" name="skill_id" value="">
-            <label>Название навыка
-                <input type="text" name="skill_name" value="" placeholder="Напр. Striker Kick">
-            </label>
-            <label>Тип
-                <input type="text" name="skill_type" value="" placeholder="Ультимейт / Пассивка / Навык">
-            </label>
-            <label>Описание
+            <div class="skill-form-grid">
+                <label class="stacked">Название навыка
+                    <input type="text" name="skill_name" value="" placeholder="Напр. Striker Kick">
+                </label>
+                <label class="stacked">Тип
+                    <input type="text" name="skill_type" value="" placeholder="Ультимейт / Пассивка / Навык">
+                </label>
+                <label class="stacked">Кулдаун
+                    <input type="text" name="skill_cooldown" value="" placeholder="Напр. 12с">
+                </label>
+            </div>
+            <label class="stacked">Описание
                 <textarea name="skill_description" rows="3" placeholder="Кратко опишите механику"></textarea>
-            </label>
-            <label>Кулдаун
-                <input type="text" name="skill_cooldown" value="" placeholder="Напр. 12с">
             </label>
         </div>
     </template>
 
     <script>
+        const tabButtons = document.querySelectorAll('[data-tab-target]');
+        const tabPanels = document.querySelectorAll('.tab-panel');
         const skillsList = document.getElementById('skills-list');
         const template = document.getElementById('skill-template');
         const addBtn = document.getElementById('add-skill-btn');
+        const form = document.querySelector('.character-editor');
+        const autosaveEnabled = form?.dataset.autosave === 'true';
+        const autosaveStatus = document.querySelector('.autosave-status');
+        let saveTimer;
+
+        const setStatus = (text, state) => {
+            if (!autosaveStatus) return;
+            autosaveStatus.textContent = text;
+            autosaveStatus.dataset.state = state;
+        };
+
+        const syncSkillIds = (ids = []) => {
+            if (!skillsList?.children.length) return;
+            let cursor = 0;
+            skillsList.querySelectorAll('.skill-form-row').forEach((row) => {
+                const nameInput = row.querySelector('input[name="skill_name"]');
+                const idInput = row.querySelector('input[name="skill_id"]');
+                if (!nameInput || !idInput) return;
+                if (!nameInput.value.trim()) return;
+                const nextId = ids[cursor];
+                if (nextId) {
+                    idInput.value = nextId;
+                }
+                cursor += 1;
+            });
+        };
+
+        const triggerSave = () => {
+            if (!autosaveEnabled || !form) return;
+            const required = [form.elements['name'], form.elements['slug']];
+            if (required.some((el) => !el?.value?.trim())) {
+                setStatus('Заполните имя и slug, чтобы сохранить изменения', 'error');
+                return;
+            }
+            clearTimeout(saveTimer);
+            setStatus('Сохраняю…', 'saving');
+
+            saveTimer = setTimeout(async () => {
+                try {
+                    const payload = new FormData(form);
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                        body: payload,
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Save failed');
+                    }
+
+                    const data = await response.json();
+                    syncSkillIds(data.skill_ids);
+                    setStatus('Изменения сохранены', 'done');
+                } catch (err) {
+                    setStatus('Не удалось сохранить изменения', 'error');
+                }
+            }, 500);
+        };
+
+        tabButtons.forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const target = btn.dataset.tabTarget;
+
+                tabButtons.forEach((b) => b.classList.toggle('is-active', b === btn));
+                tabPanels.forEach((panel) => {
+                    panel.classList.toggle('is-active', panel.id === target);
+                });
+            });
+        });
 
         addBtn?.addEventListener('click', () => {
             const clone = template.content.cloneNode(true);
             skillsList.appendChild(clone);
             addBtn.blur();
+            triggerSave();
         });
+
+        if (form && autosaveEnabled) {
+            form.addEventListener('input', triggerSave);
+            form.addEventListener('change', triggerSave);
+        }
     </script>
-</div>
+</form>
 {% endblock %}
