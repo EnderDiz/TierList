@@ -33,12 +33,8 @@
                         <div class="tile-value">{{ character.faction or '—' }}</div>
                     </div>
                     <div class="info-tile info-tile--centered">
-                        <div class="tile-label">Сложность</div>
-                        <div class="tile-value">{{ character.difficulty or '—' }}</div>
-                    </div>
-                        <div class="info-tile info-tile--centered">
-                        <div class="tile-label">Общий рейтинг</div>
-                        <div class="tile-value">{{ character.overall_tier or '—' }}</div>
+                        <div class="tile-label">Класс</div>
+                        <div class="tile-value">{{ character.class_name or '—' }}</div>
                     </div>
                 </div>
             </div>
@@ -141,7 +137,7 @@
         </div>
 
         <div class="overview-section">
-            <h2 class="section-title">За и Против</h2>
+            <!--  <h2 class="section-title">За и Против</h2> Плохо? -->
             <div class="pros-cons">
                 <div class="pros-cons__col pros-cons__col--pros">
                     <h3 class="pros-cons__title">Плюсы</h3>

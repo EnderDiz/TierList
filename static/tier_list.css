@@ -130,14 +130,14 @@
 
 .tier-marker::before { display: none; }
 
-.tier-marker.tier-sss { --tier-color: #b075d9; }
-.tier-marker.tier-ss  { --tier-color: #d28a8a; }
-.tier-marker.tier-s   { --tier-color: #CA2C92; }  /*цвет Королевская фуксия*/
-.tier-marker.tier-a   { --tier-color: #E52B50; }  /*цвет Амаратовый*/
-.tier-marker.tier-b   { --tier-color: #50C878; } /*цвет Изумрудный*/
-.tier-marker.tier-c   { --tier-color: #ACE5EE; }
-.tier-marker.tier-d   { --tier-color: #FFFAFA; }
-.tier-marker.tier-unranked { --tier-color: #FAEBD7; }
+.tier-marker.tier-sss { --tier-color: #e04be0; }
+.tier-marker.tier-ss  { --tier-color: #ef5350; }
+.tier-marker.tier-s   { --tier-color: #ff7f7f; }
+.tier-marker.tier-a   { --tier-color: #f9a2a2; }
+.tier-marker.tier-b   { --tier-color: #ffbf7f; }
+.tier-marker.tier-c   { --tier-color: #ffff7f; }
+.tier-marker.tier-d   { --tier-color: #FAEBD7; }
+.tier-marker.tier-unranked { --tier-color: #FFFAFA; }
 
 
 .tier-grid {
@@ -318,11 +318,11 @@
     background: #23242a;
 }
 
-.tier-pill.tier-d { background: #FFFAFA; }
-.tier-pill.tier-c { background: #ACE5EE; }
-.tier-pill.tier-b { background: #50C878; }
-.tier-pill.tier-a { background: #E52B50; }
-.tier-pill.tier-s { background: #CA2C92; }
-.tier-pill.tier-ss { background: #d28a8a; }
-.tier-pill.tier-sss { background: #b075d9; }
+.tier-pill.tier-d { background: #FAEBD7; }
+.tier-pill.tier-c { background: #ffff7f; }
+.tier-pill.tier-b { background: #ffbf7f; }
+.tier-pill.tier-a { background: #f9a2a2; }
+.tier-pill.tier-s { background: #ff7f7f; }
+.tier-pill.tier-ss { background: #ef5350; }
+.tier-pill.tier-sss { background: #e04be0; }
 .tier-pill.tier-none { opacity: 0.8; }
