@@ -13,6 +13,12 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
+    BALANCE_STATUSES: dict[str, str] = {
+        "nerf": "Ослабление",
+        "buff": "Усиление",
+        "rework": "Переработка",
+    }
+
     app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
     db.init_app(app)
@@ -90,6 +96,13 @@ def create_app():
         return sources
 
     app.jinja_env.globals["image_sources"] = image_sources
+    app.jinja_env.globals["BALANCE_STATUSES"] = BALANCE_STATUSES
+
+    def normalize_balance_status(value: str | None):
+        value = (value or "").strip().lower()
+        if not value:
+            return None
+        return value if value in BALANCE_STATUSES else None
 
     # ------- Маршруты --------
 
@@ -300,6 +313,10 @@ def create_app():
             class_name = request.form.get("class_name")
             faction = request.form.get("faction")
 
+            balance_status = normalize_balance_status(
+                request.form.get("balance_status")
+            )
+
             tier_weapon = request.form.get("tier_weapon")
             tier_skill = request.form.get("tier_skill")
             tier_passive = request.form.get("tier_passive")
@@ -320,6 +337,7 @@ def create_app():
                 slug=slug,
                 class_name=class_name,
                 faction=faction,
+                balance_status=balance_status,
                 tier_weapon=tier_weapon,
                 tier_skill=tier_skill,
                 tier_passive=tier_passive,
@@ -353,6 +371,10 @@ def create_app():
             ch.slug = request.form.get("slug")
             ch.class_name = request.form.get("class_name")
             ch.faction = request.form.get("faction")
+
+            ch.balance_status = normalize_balance_status(
+                request.form.get("balance_status")
+            )
 
             ch.tier_weapon = request.form.get("tier_weapon")
             ch.tier_skill = request.form.get("tier_skill")

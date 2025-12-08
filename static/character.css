@@ -21,6 +21,10 @@
     font-weight: 600;
 }
 
+.char-balance {
+    margin: 0 0 10px;
+}
+
 .char-ratings {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));

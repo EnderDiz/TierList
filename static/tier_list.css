@@ -111,11 +111,13 @@
 
 .tier-marker {
     position: relative;
-    width: 36px;
+    width: 68px;
+    flex: 0 0 68px;
     display: flex;
+    align-self: stretch;
     align-items: center;
-    justify-content: flex-start;
-    padding-left: 26px;
+    justify-content: center;
+    padding-left: 0;
     font-weight: 800;
     font-size: 20px;
     letter-spacing: 1px;
@@ -123,17 +125,10 @@
     color: #23242a;
     background: var(--tier-color, #7c7f8a);
     border-right: 1px solid #33343a;
+    border-radius: 10px 0 0 10px;
 }
 
-.tier-marker::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 16px;
-    background: var(--tier-color, #7c7f8a);
-}
+.tier-marker::before { display: none; }
 
 .tier-marker.tier-sss { --tier-color: #b075d9; }
 .tier-marker.tier-ss  { --tier-color: #d28a8a; }
@@ -158,6 +153,12 @@
 
 .tier-icon {
     display: block;
+        position: relative;
+    z-index: 1;
+}
+
+.tier-icon:hover {
+    z-index: 90;
 }
 
 .icon-frame {
@@ -170,6 +171,25 @@
     width: 112px;
     height: 112px;
     z-index: 1;
+}
+
+.balance-marker {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    z-index: 5;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+}
+
+.icon-frame .balance-badge {
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.icon-frame .balance-badge__icon {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
 }
 
 .icon-frame::after {
@@ -198,8 +218,9 @@
 .icon-overlay {
     position: absolute;
     left: 50%;
-    top: -10px;
-    transform: translate(-50%, -100%);
+    top: auto;
+    bottom: auto;
+    transform: translateX(-50%);
     min-width: 220px;
     background: #181920f0;
     border: 1px solid #33343a;
@@ -218,6 +239,19 @@
     text-align: center;
     box-shadow: 0 14px 30px rgba(9, 12, 20, 0.45);
 }
+
+.icon-overlay.overlay-down {
+    top: 100%;
+    bottom: auto;
+    transform: translate(-50%, 12px);
+}
+
+.icon-overlay.overlay-up {
+    bottom: 100%;
+    top: auto;
+    transform: translate(-50%, -12px);
+}
+
 
 .tier-icon:hover .icon-overlay {
     opacity: 1;
@@ -254,6 +288,16 @@
     padding: 4px 8px;
     border-radius: 999px;
     font-weight: 700;
+}
+
+.overlay-update {
+    display: flex;
+    justify-content: center;
+}
+
+.overlay-update .balance-badge {
+    padding: 4px 8px;
+    font-size: 12px;
 }
 
 .overlay-ratings {

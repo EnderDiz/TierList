@@ -12,3 +12,14 @@
     <div class="placeholder-img face-frame face-frame-{{ size }}">{{ placeholder }}</div>
     {% endif %}
 {% endmacro %}
+
+{% macro balance_badge(status, show_label=False) %}
+    {% set icons = {'nerf': '↓', 'buff': '↑', 'rework': '↻'} %}
+    {% set labels = {'nerf': 'Нерф', 'buff': 'Бафф', 'rework': 'Изменён'} %}
+    {% if status in icons %}
+        <span class="balance-badge balance-{{ status }}">
+            <span class="balance-badge__icon">{{ icons[status] }}</span>
+            {% if show_label %}<span class="balance-badge__label">{{ labels[status] }}</span>{% endif %}
+        </span>
+    {% endif %}
+{% endmacro %}

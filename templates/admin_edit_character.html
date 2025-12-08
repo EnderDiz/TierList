@@ -46,6 +46,16 @@
                 </select>
             </label>
 
+            <label>Обновление баланса
+                {% set status = character.balance_status if character else '' %}
+                <select name="balance_status">
+                    <option value="">Не отмечено</option>
+                    <option value="buff" {% if status=='buff' %}selected{% endif %}>Бафф</option>
+                    <option value="nerf" {% if status=='nerf' %}selected{% endif %}>Нерф</option>
+                    <option value="rework" {% if status=='rework' %}selected{% endif %}>Изменён</option>
+                </select>
+            </label>
+
             {% set tw = character.tier_weapon if character else '' %}
             {% set ts = character.tier_skill if character else '' %}
             {% set tp = character.tier_passive if character else '' %}

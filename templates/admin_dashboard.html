@@ -63,6 +63,8 @@
                     {% endif %}
                 </a>
             </th>
+            <th>Обновление</th>
+            <th class="admin-table__actions">Действия</th>
         </tr>
         </thead>
         <tbody>
@@ -73,6 +75,13 @@
             <td>{{ ch.class_name or '—' }}</td>
             <td>{{ ch.faction or '—' }}</td>
             <td>{{ ch.overall_tier or '-' }}</td>
+            <td>
+                {% if ch.balance_status %}
+                    {{ BALANCE_STATUSES.get(ch.balance_status, ch.balance_status) }}
+                {% else %}
+                    —
+                {% endif %}
+            </td>
             <td>
                 <a href="{{ url_for('admin_edit_character', char_id=ch.id) }}">Редактировать</a>
                 <form method="post"

@@ -19,6 +19,9 @@ class Character(db.Model):
     class_name = db.Column(db.String(32))
     faction = db.Column(db.String(32))
 
+    # Балансные изменения
+    balance_status = db.Column(db.String(16))
+
     tier_weapon = db.Column(db.String(3))
     tier_skill = db.Column(db.String(3))
     tier_passive = db.Column(db.String(3))

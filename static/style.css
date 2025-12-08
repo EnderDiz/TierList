@@ -196,3 +196,44 @@ button:hover,
     width: 220px;
     aspect-ratio: 1 / 1;
 }
+
+/* === БЕЙДЖИ ОБНОВЛЕНИЙ БАЛАНСА === */
+.balance-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 800;
+    font-size: 13px;
+    border: 1px solid #33343a;
+    background: #2c2d33;
+    color: #F8F4FF;
+}
+
+.balance-badge__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1;
+    padding: 2px;
+}
+
+.balance-badge.balance-nerf .balance-badge__icon {
+    background: #422027;
+    color: #ffb1c1;
+}
+
+.balance-badge.balance-buff .balance-badge__icon {
+    background: #1f3725;
+    color: #a4f3be;
+}
+
+.balance-badge.balance-rework .balance-badge__icon {
+    background: #1f2d3a;
+    color: #9fd8ff;
+}

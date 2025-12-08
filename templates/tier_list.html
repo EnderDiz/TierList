@@ -54,6 +54,7 @@
 
 <!-- Список рядов тир-листа: маркер слева, иконки выровнены по левому краю -->
 {% for tier in ['SSS', 'SS', 'S', 'A', 'B', 'C', 'D', 'Unranked'] %}
+    {% set tier_index = loop.index %}
     {% set chars = tiers.get(tier, []) %}
     {% if chars %}
     <div class="tier-row">
@@ -63,7 +64,12 @@
             <a class="tier-icon" href="{{ url_for('character_detail', slug=ch.slug) }}">
                 <div class="icon-frame">
                     {{ macros.character_image(ch.image_name, ch.name, size='icon', placeholder=ch.name[0]) }}
-                    <div class="icon-overlay">
+                    {% if ch.balance_status %}
+                        <div class="balance-marker">
+                            {{ macros.balance_badge(ch.balance_status) }}
+                        </div>
+                    {% endif %}
+                    <div class="icon-overlay {{ 'overlay-down' if tier_index <= 2 else 'overlay-up' }}">
                         <div class="overlay-avatar">
                             {{ macros.character_image(ch.image_name, ch.name, size='small', placeholder=ch.name[0]) }}
                         </div>
